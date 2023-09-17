@@ -1,0 +1,154 @@
+*{
+    margin: 0; 
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+ }
+ body{
+     text-align: center;
+     font-family: sans-serif;
+ 
+ }
+ body{
+     background-image: url(vargas.jpg);
+     background-position: center;
+     background-attachment: fixed;
+     background-size: cover;
+     background-repeat: no-repeat;
+ }
+ .header p,
+ .header h1{
+     color: #ffffff;
+     background-color: rgba(121, 126, 123, 0.5);
+     border-radius: 20px;
+     
+ }
+ .head{
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     height: 80px;
+     background: #171717;
+     position: fixed;
+     width: 100%;
+     z-index: 100;
+ }
+ .navbar{
+     display: flex;
+     margin-right: 10px;
+ }
+ .imag{
+     display: flex;
+ }
+ .imag a{
+     padding: 10px  20px;
+     height: 200px;
+ }
+ 
+ .navbar a {
+     display: block;
+     padding: 23px  20px;
+     color: #fff;
+     text-decoration: none;
+     text-transform: uppercase;
+     font-size: 20px;
+ 
+ }
+ .navbar a:hover{
+     background: #3a3a3a;
+ }
+ 
+ .header{
+     display: flex;
+     justify-content: center;
+     align-items: center;
+ 
+ }
+ 
+ .title{
+     margin-top: -10px;
+     margin-bottom: 30px;
+     font-size: 40px;
+     font-weight: 600;
+     color: #fff;
+ 
+ }
+ p{
+     margin-bottom: 50px;
+     font-size: 18px;
+ }
+ 
+ .btn{
+     display: inline-block;
+     margin-top: 15px;
+     padding: 10px  40px;
+     border: 2px solid #9c27b0;
+     color: #fff;
+     text-decoration: none;
+     background: #9c27b0;
+ }
+ .btn:hover{
+     background: none;
+     color: #fff;
+ }
+ .btn-home{
+     display: flex;
+ }
+ 
+ .btn-home a{
+     margin: 0 10px;
+ 
+ }
+ 
+ .content {
+     height: 50vh;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+ }
+ .sau{
+    margin-top: -200px;
+ }
+ .content title{
+    margin-top: -100px;
+ }
+ .redessociales{
+    margin-top: 250px;
+ }
+ .horario{
+    color: #fff;
+    margin: 0 auto;
+    text-align: center;
+ }
+
+ @media (max-width:768px){
+     .title{
+         margin-bottom: 0;
+         font-size: 40px;
+     }
+     
+     .sau{
+         height: 110vh;
+     }
+ 
+     .navbar{
+         display: none;
+     }
+ }
+ table,th,td{
+    border: 1px solid white;
+    border-collapse: collapse;
+
+ }
+
+ td,th{
+    padding: 20px;
+ }
+ ul li{
+    color: #fff;
+ }
+ .inicio_de_sesion{
+     padding: 150px;
+     border-radius: 20px;
+ }
