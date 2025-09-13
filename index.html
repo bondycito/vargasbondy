@@ -66,7 +66,7 @@
         let shootingStars = [];
         let particles = [];
         const flowers = [];
-        const clouds = []; // Nubes añadidas
+        const clouds = [];
         const colors = {
             sky1: "#0a0220",
             sky2: "#120a40",
@@ -242,11 +242,11 @@
                     }
                 }
             }
-            draw(ctx, baseX, baseY, sway) {
+            draw(ctx, baseX, baseY, globalSwayTime) {
                 const t = this.growth;
                 if (t <= 0 && !this.exploding) return;
                 const radius = this.height * t;
-                const swayOffset = Math.sin(sway + this.swayPhase) * 10;
+                const swayOffset = Math.sin(globalSwayTime + this.swayPhase) * 10;
                 const topX = baseX + Math.cos(this.angle) * radius + swayOffset;
                 const topY = baseY - Math.sin(this.angle) * radius;
                 ctx.save();
@@ -304,10 +304,10 @@
                     ctx.restore();
                 }
             }
-            isClicked(x, y, baseX, baseY, sway) {
+            isClicked(x, y, baseX, baseY, globalSwayTime) {
                 const t = this.growth;
                 const radius = this.height * t;
-                const swayOffset = Math.sin(sway + this.swayPhase) * 10;
+                const swayOffset = Math.sin(globalSwayTime + this.swayPhase) * 10;
                 const topX = baseX + Math.cos(this.angle) * radius + swayOffset;
                 const topY = baseY - Math.sin(this.angle) * radius;
                 const dist = Math.hypot(x - topX, y - topY);
@@ -315,7 +315,6 @@
             }
         }
         
-        // Código de la clase Cloud para la animación de nubes
         class Cloud {
             constructor() {
                 this.x = -200 - Math.random() * 300;
@@ -367,19 +366,32 @@
                 });
             }
         }
-        function initFlowers() {
+     function initFlowers() {
             flowers.length = 0;
-            const spread = Math.PI / 2.2;
-            const startAngle = (Math.PI / 2) - (spread / 2);
+            // Reduce el 'spread' para que las flores estén más juntas
+            const spread = Math.PI / 3; 
+            const startAngle = (Math.PI / 2) - (spread / 2); 
+            
+            // Define un arreglo de alturas fijas para los tallos
+            // Puedes ajustar estos valores a tu gusto
+            const stemHeights = [180, 150, 250, 180, 260, 160, 250];
+
             for (let i = 0; i < FLOWER_COUNT; i++) {
+                // El ángulo para un ramito estrecho
                 const angle = startAngle + (i / (FLOWER_COUNT - 1)) * spread;
-                const h = 200 + Math.random() * 80;
+                
+                // Asigna una altura del arreglo de forma cíclica
+                const h = stemHeights[i % stemHeights.length];
+                
+                // El tamaño 's' de la flor se mantiene con una pequeña variación aleatoria
                 const s = 30 + Math.random() * 10;
+                
                 const swayPhase = Math.random() * Math.PI * 2;
                 flowers.push(new Flower(angle, h, s, swayPhase));
             }
         }
-        function initClouds() { // Función para inicializar las nubes
+        
+        function initClouds() {
             clouds.length = 0;
             for(let i = 0; i < 5; i++) {
                 clouds.push(new Cloud());
@@ -398,7 +410,7 @@
             createStars();
             shootingStars = Array.from({ length: SHOOTING_STAR_COUNT }, () => new ShootingStar());
             initFlowers();
-            initClouds(); // Inicializar nubes al redimensionar
+            initClouds();
         }
         resize();
         window.addEventListener("resize", resize);
@@ -472,7 +484,6 @@
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, cw, ch);
             
-            // Dibujar y actualizar las nubes
             for(const cloud of clouds) {
                 cloud.update(dt);
                 cloud.draw(ctx);
