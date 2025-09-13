@@ -66,6 +66,7 @@
         let shootingStars = [];
         let particles = [];
         const flowers = [];
+        const clouds = []; // Nubes añadidas
         const colors = {
             sky1: "#0a0220",
             sky2: "#120a40",
@@ -85,51 +86,46 @@
             glow: "rgba(255,255,200,0.95)"
         };
         const lyricsData = [
-            { text: "날 스치는 그대의 옅은 그 목소리\n(Tu voz tenue que me roza)", start: 3, end: 7 },
-            { text: "내 이름을 한 번만 더 불러주세요\n(Por favor, llama mi nombre una vez más)", start: 8, end: 12 },
-            { text: "얼어버린 노을 아래 멈춰 서있지만\n(Aunque estoy parado bajo el atardecer congelado)", start: 13, end: 18 },
-            { text: "그대 향해 한 걸음씩 걸어갈래요\n(Caminaré hacia ti paso a paso)", start: 19, end: 23 },
-            { text: "♪ ♪ ♪ ♪ ♪ ♪", start: 23, end: 46 },
-            { text: "어두운 방 조명 하나 없이\n(En la habitación oscura sin una sola luz)", start: 47, end: 51 },
-            { text: "익숙해지면 안 되는데\n(Aunque no debería acostumbrarme)", start: 52, end: 55 },
-            { text: "그게 또 익숙해\n(Pero se siente familiar de nuevo)", start: 55, end: 57 },
-            { text: "나지막이 들리는 이 에어컨 소리\n(El sutil sonido del aire acondicionado)", start: 57, end: 62 },
-            { text: "이거라도 없으면 나 정말 무너질 것 같아\n(Si no tuviera ni esto, creo que me derrumbaría)", start: 62, end: 66 },
-            { text: "♪ ♪ ♪ ♪ ♪ ♪", start: 66, end: 68 },
-            { text: "함께 웃고 함께 울고\n(Riendo juntos, llorando juntos)", start: 68, end: 72 },
-            { text: "이 단순한 감정들이\n(Estas simples emociones)", start: 74, end: 76 },
-            { text: "내겐 전부였나봐\n(quizás eran todo para mí)", start: 76, end: 81 },
-            { text: "언제쯤일까\n(¿Cuándo será?)", start: 84, end: 87 },
-            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 88, end: 90 },
-            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 91, end: 95 },
-            { text: "보고 싶었어요\n(Te he extrañado)", start: 95.5, end: 96.5 },
-            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 96.5, end: 102.5 },
-            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 103, end: 107 },
-            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 108, end: 112 },
-            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 113, end: 117 },
-            { text: "그때 날 안아줘\n(Abrázame entonces)", start: 118, end: 122 },
-            { text: "저 달이 외로워 보여서\n(Porque la luna parecía solitaria)", start: 123, end: 128 },
-            { text: "밤하늘에 환하게 울고 있는 것 같아서\n(Parecía llorar brillantemente en el cielo nocturno)", start: 128, end: 135 },
-            { text: "언젠가 아침이 오는 걸 알면서도\n(Sabiendo que algún día llegaría la mañana)", start: 135, end: 140 },
-            { text: "별처럼 너의 하늘에 머물고 싶었어\n(Quería quedarme en tu cielo como una estrella)", start: 140, end: 144 },
-            { text: "하루를 그 순간을\n(Ese día, ese momento)", start: 144, end: 149 },
-            { text: "이렇게 될 걸 알았다면\n(Si hubiera sabido que sería así)", start: 150, end: 154 },
-            { text: "더 담아뒀을 텐데\n(Los habría guardado más en mis recuerdos)", start: 155, end: 160 },
-            { text: "언제쯤일까\n(¿Cuándo será?)", start: 161, end: 165 },
-            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 166, end: 170 },
-            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 171, end: 174 },
-            { text: "보고 싶었어요\n(Te he extrañado)", start: 175, end: 179 },
-            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 180, end: 185 },
-            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 186, end: 190 },
-            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 191, end: 195 },
-            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 196, end: 200 },
-            { text: "그때 날 안아줘\n(Abrázame entonces)", start: 201, end: 205 },
-            { text: "♪ ♪ ♪ ♪ ♪ ♪", start: 205, end: 206 },
-            { text: "날 바라보는 희미한 미소 뒤편에\n(Detrás de tu tenue sonrisa al mirarme)", start: 206, end: 211 },
-            { text: "아름다운 보랏빛을 그려볼래요\n(Quiero pintar un hermoso color púrpura)", start: 215, end: 220 },
-            { text: "서로 발걸음이 안 맞을 수도 있지만\n(Aunque nuestros pasos no coincidan)", start: 220, end: 226 },
-            { text: "그대와 함께 이 길을 걷고 싶어요\n(Quiero caminar este camino contigo)", start: 226, end: 231 },
-            { text: "Still With You\n(Aún contigo)", start: 232, end: 235 }
+            { text: "날 스치는 그대의 옅은 그 목소리\n(Esa suave voz tuya que me roza)", start: 2.29, end: 7.89 },
+            { text: "내 이름을 한 번만 더 불러주세요\n(Por favor, llama mi nombre una vez más)", start: 8.38, end: 13.41 },
+            { text: "얼어버린 노을 아래 멈춰 서있지만\n(Estoy parado bajo la puesta de Sol congelado)", start: 13.51, end: 18.82 },
+            { text: "그대 향해 한 걸음씩 걸어갈래요\n(Pero caminaré hacia ti paso a paso)", start: 19.00, end: 24.18 },
+            { text: "Still with you\nStill with you", start: 24.32, end: 25.98 },
+            { text: "♫♫♫♫♫♫", start: 26.04, end: 47.25 },
+            { text: "어두운 방 조명 하나 없이\n(En una habitación oscura sin luz)", start: 47.50, end: 51.83 },
+            { text: "익숙해지면 안 되는데\n(No debería estar acostumbrado a esto)", start: 52.32, end: 54.96 },
+            { text: "그게 또 익숙해\n(Pero es tan familiar)", start: 54.98, end: 57.17 },
+            { text: "나지막이 들리는 이 에어컨 소리\n(El bajo ruido De este aire acondicionado)", start: 57.20, end: 62.51 },
+            { text: "이거라도 없으면 나 정말 무너질 것 같아\n(Sin esto, creo que Voy a colapsar)", start: 62.52, end: 67.95 },
+            { text: "함께 웃고 함께 울고\n(Riendo juntos, llorando juntos)", start: 68.25, end: 73.78 },
+            { text: "이 단순한 감정들이\n(Creo que estas simples emociones)", start: 73.86, end: 76.10 },
+            { text: "내겐 전부였나 봐\n(Eran todo para mí)", start: 76.12, end: 78.97 },
+            { text: "언제쯤일까 다시 그댈 마주한다면?\n(¿Cuándo será Que nos volveremos a ver cara a cara?)", start: 79.39, end: 84.29 },
+            { text: "눈을 보고 말할래요 보고 싶었어요\n(Te miraré a los ojos Y te diré que te extrañé)", start: 84.44, end: 89.66 },
+            { text: "황홀했던 기억 속에 나 홀로 춤을 춰도 비가 내리잖아\n(En esos bonitos recuerdos La lluvia cae, aunque bailo solo)", start: 89.86, end: 99.74 },
+            { text: "이 안개가 걷힐 때쯤\n(Para cuando esta niebla se disipe)", start: 99.76, end: 103.32 },
+            { text: "젖은 발로 달려갈 게\n(Correré hacia ti con los pies empapados)", start: 103.35, end: 106.11 },
+            { text: "그때 날 안아줘\n(Abrázame fuerte cuando llegue ese momento)", start: 106.18, end: 111.19 },
+            { text: "♫♫♫♫♫♫", start: 111.39, end: 123.17 },
+            { text: "저 달이 외로워 보여서\n(La Luna se ve solitaria)", start: 123.21, end: 127.66 },
+            { text: "밤하늘에 환하게 울고 있는 것 같아서\n(Como si estuviese llorando en el cielo brillante)", start: 127.69, end: 133.77 },
+            { text: "언젠가 아침이 오는 걸 알면서도\n(Aunque sepa que mañana vendrá de nuevo)", start: 133.79, end: 139.20 },
+            { text: "별처럼 너의 하늘에 머물고 싶었어\n(Quería quedarme en tu cielo como una estrella)", start: 139.24, end: 144.83 },
+            { text: "하루를 그 순간을\n(Aquellos momentos, aquellos días)", start: 145.13, end: 150.06 },
+            { text: "이렇게 될 걸 알았다면\n(Si hubiese sabido que terminarían así)", start: 150.16, end: 152.75 },
+            { text: "더 담아뒀을 텐데\n(Me hubiera aferrado a ellos más)", start: 152.78, end: 155.38 },
+            { text: "언제쯤일까 다시 그댈 마주한다면?\n(¿Cuándo será Que nos volveremos a ver cara a cara?)", start: 155.65, end: 160.78 },
+            { text: "눈을 보고 말할래요 보고 싶었어요\n(Te miraré a los ojos Y te diré que te extrañé)", start: 160.81, end: 166.08 },
+            { text: "황홀했던 기억 속에 나 홀로 춤을 춰도 비가 내리잖아\n(En esos bonitos recuerdos La lluvia cae, aunque bailo solo)", start: 166.17, end: 176.23 },
+            { text: "이 안개가 걷힐 때쯤\n(Para cuando esta niebla se disipe)", start: 176.26, end: 179.73 },
+            { text: "젖은 발로 달려갈 게\n(Correré hacia ti con los pies empapados)", start: 179.75, end: 182.55 },
+            { text: "그때 날 잡아줘\n(Abrázame fuerte cuando llegue ese momento)", start: 182.56, end: 187.59 },
+            { text: "♫♫♫♫♫♫", start: 187.59, end: 209.78 },
+            { text: "날 바라보는 희미한 미소 뒤편에\n(Detrás de la suave sonrisa con la que me miraste)", start: 209.78, end: 215.15 },
+            { text: "아름다운 보랏빛을 그려볼래요\n(Voy a dibujar una hermosa luz púrpura)", start: 215.58, end: 220.62 },
+            { text: "서로 발걸음이 안 맞을 수도 있지만\n(Aunque nuestros pasos no estén sincronizados)", start: 220.66, end: 226.16 },
+            { text: "그대와 함께 이 길을 걷고 싶어요\n(Quiero caminar este sendero contigo)", start: 226.19, end: 231.45 },
+            { text: "Still with you\nStill with you", start: 231.52, end: 233.64 },
         ];
         class Particle {
             constructor(x, y, color = "white") {
@@ -318,6 +314,48 @@
                 return dist < this.size * 1.5;
             }
         }
+        
+        // Código de la clase Cloud para la animación de nubes
+        class Cloud {
+            constructor() {
+                this.x = -200 - Math.random() * 300;
+                this.y = ch * 0.7 + Math.random() * ch * 0.3;
+                this.scale = 0.8 + Math.random() * 0.7;
+                this.speed = 0.5 + Math.random() * 0.8;
+                this.opacity = 0.05 + Math.random() * 0.05;
+                this.blur = 15 + Math.random() * 10;
+            }
+            update(dt) {
+                this.x += this.speed * dt * 20;
+                if (this.x > cw + 300) {
+                    this.x = -300 - Math.random() * 300;
+                    this.y = ch * 0.7 + Math.random() * ch * 0.3;
+                    this.scale = 0.8 + Math.random() * 0.7;
+                    this.speed = 0.5 + Math.random() * 0.8;
+                    this.opacity = 0.05 + Math.random() * 0.05;
+                    this.blur = 15 + Math.random() * 10;
+                }
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = "#fff";
+                ctx.filter = `blur(${this.blur}px)`;
+                ctx.beginPath();
+                ctx.arc(this.x + 40 * this.scale, this.y - 20 * this.scale, 80 * this.scale, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x + 120 * this.scale, this.y + 10 * this.scale, 100 * this.scale, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x + 220 * this.scale, this.y - 10 * this.scale, 120 * this.scale, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                ctx.filter = 'none';
+                ctx.restore();
+            }
+        }
+
         function createStars() {
             stars.length = 0;
             for (let i = 0; i < STAR_COUNT; i++) {
@@ -341,6 +379,12 @@
                 flowers.push(new Flower(angle, h, s, swayPhase));
             }
         }
+        function initClouds() { // Función para inicializar las nubes
+            clouds.length = 0;
+            for(let i = 0; i < 5; i++) {
+                clouds.push(new Cloud());
+            }
+        }
         function resize() {
             cw = window.innerWidth;
             ch = window.innerHeight;
@@ -354,6 +398,7 @@
             createStars();
             shootingStars = Array.from({ length: SHOOTING_STAR_COUNT }, () => new ShootingStar());
             initFlowers();
+            initClouds(); // Inicializar nubes al redimensionar
         }
         resize();
         window.addEventListener("resize", resize);
@@ -426,6 +471,13 @@
             grad.addColorStop(1, colors.horizon);
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, cw, ch);
+            
+            // Dibujar y actualizar las nubes
+            for(const cloud of clouds) {
+                cloud.update(dt);
+                cloud.draw(ctx);
+            }
+
             ctx.globalAlpha = 1;
             ctx.fillStyle = "white";
             for (const s of stars) {
