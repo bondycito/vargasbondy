@@ -3,30 +3,26 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Abanico de girasoles - Optimizado</title>
+    <title>Still With You - Korean version</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         html, body {
             height: 100%;
         }
-
         body {
             background: black;
             overflow: hidden;
         }
-
         canvas {
             display: block;
             width: 100%;
             height: 100vh;
             cursor: crosshair;
         }
-
         #subtitles {
             position: absolute;
             top: 5%;
@@ -41,8 +37,8 @@
             z-index: 10;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
+            white-space: pre-wrap;
         }
-
         #subtitles.active {
             opacity: 1;
         }
@@ -57,25 +53,19 @@
         const ctx = canvas.getContext("2d");
         const audio = document.getElementById("background-music");
         const subtitlesDiv = document.getElementById("subtitles");
-
-        // Optimización: Limitar el dpr para mejor rendimiento en móviles
         const dpr = Math.min(1.5, window.devicePixelRatio || 1);
         let cw = window.innerWidth;
         let ch = window.innerHeight;
         let baseX, baseY;
-
-        // Reducción de elementos para mejor rendimiento
         const STAR_COUNT = 80;
         const SHOOTING_STAR_COUNT = 1;
-        const FLOWER_COUNT = 7; // CAMBIO: Aumentamos a 7 flores
-        const PARTICLE_CLICK_COUNT = 8; // Reducción
-        const PARTICLE_MOUSE_COUNT = 0.1; // Reducción
-
+        const FLOWER_COUNT = 7;
+        const PARTICLE_CLICK_COUNT = 8;
+        const PARTICLE_MOUSE_COUNT = 0.1;
         const stars = [];
         let shootingStars = [];
         let particles = [];
         const flowers = [];
-
         const colors = {
             sky1: "#0a0220",
             sky2: "#120a40",
@@ -94,67 +84,53 @@
             center2: "#5a3a00",
             glow: "rgba(255,255,200,0.95)"
         };
-
         const lyricsData = [
-            { text: "날 스치는 그대의 옅은 그 목소리\n(Tu voz tenue que me roza)", start: 0.0, end: 4.0 },
-            { text: "내 이름을 한 번만 더 불러주세요\n(Por favor, llama mi nombre una vez más)", start: 4.5, end: 8.5 },
-            { text: "얼어버린 노을 아래 멈춰 서있지만\n(Aunque estoy parado bajo el atardecer congelado)", start: 9.0, end: 13.0 },
-            { text: "그대 향해 한 걸음씩 걸어갈래요\n(Caminaré hacia ti paso a paso)", start: 13.5, end: 17.5 },
-            { text: "어두운 방 조명 하나 없이\n(En la habitación oscura sin una sola luz)", start: 18.0, end: 22.0 },
-            { text: "익숙해지면 안 되는데\n(Aunque no debería acostumbrarme)", start: 22.5, end: 26.5 },
-            { text: "그게 또 익숙해\n(Pero se siente familiar de nuevo)", start: 27.0, end: 31.0 },
-            { text: "나지막이 들리는 이 에어컨 소리\n(El sutil sonido del aire acondicionado)", start: 31.5, end: 35.5 },
-            { text: "이거라도 없으면 나 정말 무너질 것 같아\n(Si no tuviera ni esto, creo que me derrumbaría)", start: 36.0, end: 40.0 },
-            { text: "함께 웃고 함께 울고\n(Riendo juntos, llorando juntos)", start: 40.5, end: 44.5 },
-            { text: "이 단순한 감정들이\n(Estas simples emociones)", start: 45.0, end: 49.0 },
-            { text: "내겐 전부였나봐\n(quizás eran todo para mí)", start: 49.5, end: 53.5 },
-            { text: "언제쯤일까\n(¿Cuándo será?)", start: 54.0, end: 58.0 },
-            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 58.5, end: 62.5 },
-            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 63.0, end: 67.0 },
-            { text: "보고 싶었어요\n(Te he extrañado)", start: 67.5, end: 71.5 },
-            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 72.0, end: 76.0 },
-            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 76.5, end: 80.5 },
-            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 81.0, end: 85.0 },
-            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 85.5, end: 89.5 },
-            { text: "그때 날 안아줘\n(Abrázame entonces)", start: 90.0, end: 94.0 },
-            { text: "저 달이 외로워 보여서\n(Porque la luna parecía solitaria)", start: 94.5, end: 98.5 },
-            { text: "밤하늘에 환하게 울고 있는 것 같아서\n(Parecía llorar brillantemente en el cielo nocturno)", start: 99.0, end: 103.0 },
-            { text: "언젠가 아침이 오는 걸 알면서도\n(Sabiendo que algún día llegaría la mañana)", start: 103.5, end: 107.5 },
-            { text: "별처럼 너의 하늘에 머물고 싶었어\n(Quería quedarme en tu cielo como una estrella)", start: 108.0, end: 112.0 },
-            { text: "하루를 그 순간을\n(Ese día, ese momento)", start: 112.5, end: 116.5 },
-            { text: "이렇게 될 걸 알았다면\n(Si hubiera sabido que sería así)", start: 117.0, end: 121.0 },
-            { text: "더 담아뒀을 텐데\n(Los habría guardado más en mis recuerdos)", start: 121.5, end: 125.5 },
-            { text: "언제쯤일까\n(¿Cuándo será?)", start: 126.0, end: 130.0 },
-            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 130.5, end: 134.5 },
-            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 135.0, end: 139.0 },
-            { text: "보고 싶었어요\n(Te he extrañado)", start: 139.5, end: 143.5 },
-            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 144.0, end: 148.0 },
-            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 148.5, end: 152.5 },
-            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 153.0, end: 157.0 },
-            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 157.5, end: 161.5 },
-            { text: "그때 날 잡아줘\n(Abrázame entonces)", start: 162.0, end: 166.0 },
-            { text: "날 바라보는 희미한 미소 뒤편에\n(Detrás de tu tenue sonrisa al mirarme)", start: 166.5, end: 170.5 },
-            { text: "아름다운 보랏빛을 그려볼래요\n(Quiero pintar un hermoso color púrpura)", start: 171.0, end: 175.0 },
-            { text: "서로 발걸음이 안 맞을 수도 있지만\n(Aunque nuestros pasos no coincidan)", start: 175.5, end: 179.5 },
-            { text: "그대와 함께 이 길을 걷고 싶어요\n(Quiero caminar este camino contigo)", start: 180.0, end: 184.0 },
-            { text: "Still With You\n(Aún contigo)", start: 184.5, end: 188.5 },
-            { text: "Still With You\n(Aún contigo)", start: 189.0, end: 193.0 }
+            { text: "날 스치는 그대의 옅은 그 목소리\n(Tu voz tenue que me roza)", start: 3, end: 7 },
+            { text: "내 이름을 한 번만 더 불러주세요\n(Por favor, llama mi nombre una vez más)", start: 8, end: 12 },
+            { text: "얼어버린 노을 아래 멈춰 서있지만\n(Aunque estoy parado bajo el atardecer congelado)", start: 13, end: 18 },
+            { text: "그대 향해 한 걸음씩 걸어갈래요\n(Caminaré hacia ti paso a paso)", start: 19, end: 23 },
+            { text: "♪ ♪ ♪ ♪ ♪ ♪", start: 23, end: 46 },
+            { text: "어두운 방 조명 하나 없이\n(En la habitación oscura sin una sola luz)", start: 47, end: 51 },
+            { text: "익숙해지면 안 되는데\n(Aunque no debería acostumbrarme)", start: 52, end: 55 },
+            { text: "그게 또 익숙해\n(Pero se siente familiar de nuevo)", start: 55, end: 57 },
+            { text: "나지막이 들리는 이 에어컨 소리\n(El sutil sonido del aire acondicionado)", start: 57, end: 62 },
+            { text: "이거라도 없으면 나 정말 무너질 것 같아\n(Si no tuviera ni esto, creo que me derrumbaría)", start: 62, end: 66 },
+            { text: "♪ ♪ ♪ ♪ ♪ ♪", start: 66, end: 68 },
+            { text: "함께 웃고 함께 울고\n(Riendo juntos, llorando juntos)", start: 68, end: 72 },
+            { text: "이 단순한 감정들이\n(Estas simples emociones)", start: 74, end: 76 },
+            { text: "내겐 전부였나봐\n(quizás eran todo para mí)", start: 76, end: 81 },
+            { text: "언제쯤일까\n(¿Cuándo será?)", start: 84, end: 87 },
+            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 88, end: 90 },
+            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 91, end: 95 },
+            { text: "보고 싶었어요\n(Te he extrañado)", start: 95.5, end: 96.5 },
+            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 96.5, end: 102.5 },
+            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 103, end: 107 },
+            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 108, end: 112 },
+            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 113, end: 117 },
+            { text: "그때 날 안아줘\n(Abrázame entonces)", start: 118, end: 122 },
+            { text: "저 달이 외로워 보여서\n(Porque la luna parecía solitaria)", start: 123, end: 128 },
+            { text: "밤하늘에 환하게 울고 있는 것 같아서\n(Parecía llorar brillantemente en el cielo nocturno)", start: 128, end: 135 },
+            { text: "언젠가 아침이 오는 걸 알면서도\n(Sabiendo que algún día llegaría la mañana)", start: 135, end: 140 },
+            { text: "별처럼 너의 하늘에 머물고 싶었어\n(Quería quedarme en tu cielo como una estrella)", start: 140, end: 144 },
+            { text: "하루를 그 순간을\n(Ese día, ese momento)", start: 144, end: 149 },
+            { text: "이렇게 될 걸 알았다면\n(Si hubiera sabido que sería así)", start: 150, end: 154 },
+            { text: "더 담아뒀을 텐데\n(Los habría guardado más en mis recuerdos)", start: 155, end: 160 },
+            { text: "언제쯤일까\n(¿Cuándo será?)", start: 161, end: 165 },
+            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 166, end: 170 },
+            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 171, end: 174 },
+            { text: "보고 싶었어요\n(Te he extrañado)", start: 175, end: 179 },
+            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 180, end: 185 },
+            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 186, end: 190 },
+            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 191, end: 195 },
+            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 196, end: 200 },
+            { text: "그때 날 안아줘\n(Abrázame entonces)", start: 201, end: 205 },
+            { text: "♪ ♪ ♪ ♪ ♪ ♪", start: 205, end: 206 },
+            { text: "날 바라보는 희미한 미소 뒤편에\n(Detrás de tu tenue sonrisa al mirarme)", start: 206, end: 211 },
+            { text: "아름다운 보랏빛을 그려볼래요\n(Quiero pintar un hermoso color púrpura)", start: 215, end: 220 },
+            { text: "서로 발걸음이 안 맞을 수도 있지만\n(Aunque nuestros pasos no coincidan)", start: 220, end: 226 },
+            { text: "그대와 함께 이 길을 걷고 싶어요\n(Quiero caminar este camino contigo)", start: 226, end: 231 },
+            { text: "Still With You\n(Aún contigo)", start: 232, end: 235 }
         ];
-
-        // --- Utilidades ---
-        function createStars() {
-            stars.length = 0;
-            for (let i = 0; i < STAR_COUNT; i++) {
-                stars.push({
-                    x: Math.random() * cw,
-                    y: Math.random() * ch,
-                    r: Math.random() * 0.8,
-                    alpha: 0.25 + Math.random() * 0.75
-                });
-            }
-        }
-
-        // --- Partículas chispeantes ---
         class Particle {
             constructor(x, y, color = "white") {
                 this.x = x;
@@ -166,13 +142,11 @@
                 this.size = 1 + Math.random();
                 this.color = color;
             }
-
             update(dt) {
                 this.life += dt;
                 this.x += this.vx * dt;
                 this.y += this.vy * dt;
             }
-
             draw(ctx) {
                 const alpha = 1 - (this.life / this.maxLife);
                 if (alpha <= 0) return;
@@ -183,13 +157,10 @@
                 ctx.fill();
                 ctx.globalAlpha = 1;
             }
-
             get dead() {
                 return this.life >= this.maxLife;
             }
         }
-
-        // --- Estrella fugaz ---
         let starCounter = 0;
         class ShootingStar {
             constructor(x, y, special = false) {
@@ -203,7 +174,6 @@
                 this.opacity = 1;
                 this.special = special;
             }
-
             update(dt) {
                 this.life += dt;
                 this.x += Math.cos(this.angle) * this.speed * dt;
@@ -213,12 +183,10 @@
                     particles.push(new Particle(this.x, this.y, this.special ? this.rainbowColor() : "white"));
                 }
             }
-
             rainbowColor() {
                 const hue = (Date.now() / 20) % 360;
                 return `hsl(${hue}, 100%, 70%)`;
             }
-
             draw(ctx) {
                 ctx.save();
                 ctx.globalAlpha = Math.max(0, this.opacity);
@@ -240,13 +208,10 @@
                 ctx.stroke();
                 ctx.restore();
             }
-
             get dead() {
                 return this.life >= this.maxLife;
             }
         }
-
-        // --- Flor con tallo y hojas ---
         class Flower {
             constructor(angle, height, size, swayPhase) {
                 this.angle = angle;
@@ -260,7 +225,6 @@
                 this.opacity = 1;
                 this.regrowDelay = 0;
             }
-
             update(dt) {
                 if (this.regrowDelay > 0) {
                     this.regrowDelay = Math.max(0, this.regrowDelay - dt);
@@ -282,17 +246,13 @@
                     }
                 }
             }
-
             draw(ctx, baseX, baseY, sway) {
                 const t = this.growth;
                 if (t <= 0 && !this.exploding) return;
-
                 const radius = this.height * t;
                 const swayOffset = Math.sin(sway + this.swayPhase) * 10;
                 const topX = baseX + Math.cos(this.angle) * radius + swayOffset;
                 const topY = baseY - Math.sin(this.angle) * radius;
-
-                // Tallo
                 ctx.save();
                 ctx.lineWidth = 6;
                 const gradStem = ctx.createLinearGradient(baseX, baseY, topX, topY);
@@ -305,8 +265,6 @@
                 ctx.lineTo(topX, topY);
                 ctx.stroke();
                 ctx.restore();
-
-                // Hojas (Simplificadas)
                 ctx.save();
                 ctx.fillStyle = colors.leafMid;
                 ctx.globalAlpha = 0.9;
@@ -317,17 +275,12 @@
                 ctx.ellipse(baseX + (topX - baseX) * 0.5 + 20, baseY + (topY - baseY) * 0.5, 25 * t, 12 * t, -Math.PI / 3, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
-
-
                 if (t > 0.1 || this.exploding) {
                     ctx.save();
                     ctx.globalAlpha = this.opacity;
                     ctx.translate(topX, topY);
                     ctx.scale(this.explosionScale, this.explosionScale);
-
                     const flowerSize = this.size * Math.max(0.5, t);
-
-                    // Pétalos
                     for (let i = 0; i < 8; i++) {
                         ctx.save();
                         ctx.rotate((i * Math.PI) / 4);
@@ -343,8 +296,6 @@
                         ctx.fill();
                         ctx.restore();
                     }
-
-                    // Centro de la flor
                     const r = flowerSize * 0.4;
                     const g = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r);
                     g.addColorStop(0, colors.center1);
@@ -357,7 +308,6 @@
                     ctx.restore();
                 }
             }
-
             isClicked(x, y, baseX, baseY, sway) {
                 const t = this.growth;
                 const radius = this.height * t;
@@ -368,13 +318,21 @@
                 return dist < this.size * 1.5;
             }
         }
-
-        // --- Inicialización ---
+        function createStars() {
+            stars.length = 0;
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * cw,
+                    y: Math.random() * ch,
+                    r: Math.random() * 0.8,
+                    alpha: 0.25 + Math.random() * 0.75
+                });
+            }
+        }
         function initFlowers() {
             flowers.length = 0;
-            const spread = Math.PI / 2.2; // CAMBIO: Ángulo de dispersión ajustado para más flores
+            const spread = Math.PI / 2.2;
             const startAngle = (Math.PI / 2) - (spread / 2);
-
             for (let i = 0; i < FLOWER_COUNT; i++) {
                 const angle = startAngle + (i / (FLOWER_COUNT - 1)) * spread;
                 const h = 200 + Math.random() * 80;
@@ -383,7 +341,6 @@
                 flowers.push(new Flower(angle, h, s, swayPhase));
             }
         }
-
         function resize() {
             cw = window.innerWidth;
             ch = window.innerHeight;
@@ -400,8 +357,6 @@
         }
         resize();
         window.addEventListener("resize", resize);
-
-        // --- Interacciones ---
         canvas.addEventListener("click", (e) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
@@ -417,11 +372,7 @@
                     }
                 }
             }
-            // starCounter++;
-            // const special = starCounter % 5 === 0;
-            // shootingStars.push(new ShootingStar(mouseX, mouseY, special));
         });
-
         canvas.addEventListener("mousemove", (e) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -430,8 +381,6 @@
                 particles.push(new Particle(x, y, "rgba(200,200,255,0.9)"));
             }
         });
-
-        // --- Generar estrellas fugaces automáticamente ---
         function autoShootingStar() {
             const cantidad = 1;
             for (let i = 0; i < cantidad; i++) {
@@ -443,20 +392,14 @@
             setTimeout(autoShootingStar, delay);
         }
         autoShootingStar();
-
-        // --- Animación ---
         let lastTime = performance.now();
         let swayTime = 0;
         let currentSubtitleIndex = -1;
-
         function animate(now) {
             let dt = (now - lastTime) / 1000;
             lastTime = now;
             if (dt > 0.05) dt = 0.05;
-
             swayTime += dt;
-
-            // Lógica de subtítulos
             const currentTime = audio.currentTime;
             let foundSubtitle = false;
             for (let i = 0; i < lyricsData.length; i++) {
@@ -475,8 +418,6 @@
                 subtitlesDiv.textContent = '';
                 currentSubtitleIndex = -1;
             }
-
-            // Dibujar fondo
             const grad = ctx.createLinearGradient(0, 0, 0, ch);
             grad.addColorStop(0, colors.sky1);
             grad.addColorStop(0.25, colors.sky2);
@@ -485,8 +426,6 @@
             grad.addColorStop(1, colors.horizon);
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, cw, ch);
-
-            // Dibujar estrellas
             ctx.globalAlpha = 1;
             ctx.fillStyle = "white";
             for (const s of stars) {
@@ -495,33 +434,25 @@
                 ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
                 ctx.fill();
             }
-
-            // Actualizar y dibujar estrellas fugaces
+            ctx.globalAlpha = 1;
             shootingStars = shootingStars.filter(s => {
                 s.update(dt);
                 s.draw(ctx);
                 return !s.dead;
             });
-
-            // Actualizar y dibujar partículas
             particles = particles.filter(p => {
                 p.update(dt);
                 p.draw(ctx);
                 return !p.dead;
             });
-
-            // Actualizar y dibujar flores
             const sway = swayTime * 1.6;
             for (const f of flowers) {
                 f.update(dt);
                 f.draw(ctx, baseX, baseY, sway);
             }
-
             requestAnimationFrame(animate);
         }
-
         requestAnimationFrame(animate);
-
         document.addEventListener('click', () => {
             if (audio.paused) {
                 audio.play();
