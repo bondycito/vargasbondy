@@ -2,15 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Abanico de girasoles con tallos, hojas y muchas estrellas fugaces</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Abanico de girasoles - Optimizado</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { height:100%; }
         body { background: black; overflow: hidden; }
-        canvas { display: block; width: 100%; height: 100vh; cursor: crosshair; touch-action: none; }
+        canvas { display:block; width:100%; height:100vh; cursor: crosshair; }
         
-        /* Estilos para los subtítulos personalizados */
         #subtitles {
             position: absolute;
             top: 5%;
@@ -20,8 +19,8 @@
             text-align: center;
             color: #fff799;
             font-family: sans-serif;
-            font-size: clamp(1rem, 3.5vw, 1.8rem); /* Escala el tamaño de fuente */
-            text-shadow: 2px 2px 4px #000;
+            font-size: 1.2rem; /* Tamaño de fuente más pequeño para móviles */
+            text-shadow: 1px 1px 2px #000; /* Sombra más ligera */
             z-index: 10;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -29,14 +28,6 @@
         
         #subtitles.active {
             opacity: 1;
-        }
-
-        /* Ajustes para pantallas pequeñas */
-        @media (max-width: 600px) {
-            #subtitles {
-                top: 10%;
-                font-size: clamp(0.8rem, 4vw, 1.2rem);
-            }
         }
     </style>
 </head>
@@ -47,16 +38,23 @@
 
     <script>
         const canvas = document.getElementById("scene");
-        const ctx = canvas.getContext("2d", { alpha: false });
+        const ctx = canvas.getContext("2d"); // No es necesario { alpha: false } si el fondo ya es negro
         const audio = document.getElementById("background-music");
         const subtitlesDiv = document.getElementById("subtitles");
 
+        // Optimización: Reducir la resolución interna del canvas para menos píxeles a renderizar
+        const dpr = Math.min(1.5, window.devicePixelRatio || 1); 
+
         let cw = window.innerWidth;
         let ch = window.innerHeight;
-        const dpr = Math.min(window.devicePixelRatio || 1, 2); // Limita DPR para móviles
+        let baseX, baseY;
 
-        let baseX = cw / 2;
-        let baseY = ch;
+        // Optimización: Reducir la cantidad de estrellas y elementos
+        const STAR_COUNT = 100;
+        const SHOOTING_STAR_COUNT = 1;
+        const FLOWER_COUNT = 4;
+        const PARTICLE_CLICK_COUNT = 10;
+        const PARTICLE_MOUSE_COUNT = 1; // Reducido para evitar lag al mover el mouse
 
         const stars = [];
         let shootingStars = [];
@@ -74,20 +72,20 @@
             glow: "rgba(255,255,200,0.95)"
         };
 
-        // Datos de subtítulos
         const lyricsData = [
             { text: "날 스치는 그대의 옅은 그 목소리\n(Tu voz tenue que me roza)", start: 0.0, end: 4.0 },
-            // ... (resto de los subtítulos, omitidos por brevedad) ...
+            { text: "내 이름을 한 번만 더 불러주세요\n(Por favor, llama mi nombre una vez más)", start: 4.5, end: 8.5 },
+            // ... (resto de los datos)
         ];
 
         // --- Utilidades ---
-        function createStars(count = Math.min(220, Math.floor(cw * ch / 5000))) { // Reducir estrellas en móviles
+        function createStars() {
             stars.length = 0;
-            for (let i = 0; i < count; i++) {
+            for (let i = 0; i < STAR_COUNT; i++) {
                 stars.push({
                     x: Math.random() * cw,
                     y: Math.random() * ch,
-                    r: Math.random() * (cw < 600 ? 0.8 : 1.2),
+                    r: Math.random() * 0.8, // Radios más pequeños
                     alpha: 0.25 + Math.random() * 0.75
                 });
             }
@@ -98,11 +96,12 @@
             constructor(x, y, color = "white") {
                 this.x = x;
                 this.y = y;
-                this.vx = (Math.random() - 0.5) * (cw < 600 ? 60 : 100);
-                this.vy = (Math.random() - 0.5) * (cw < 600 ? 60 : 100);
+                // Optimización: Velocidades más bajas para menos movimiento
+                this.vx = (Math.random() - 0.5) * 50; 
+                this.vy = (Math.random() - 0.5) * 50;
                 this.life = 0;
-                this.maxLife = 0.6 + Math.random() * 0.6;
-                this.size = (cw < 600 ? 0.8 : 1) + Math.random() * (cw < 600 ? 1.5 : 2);
+                this.maxLife = 0.5 + Math.random() * 0.5;
+                this.size = 1 + Math.random(); // Tamaño más pequeño
                 this.color = color;
             }
             update(dt) {
@@ -129,11 +128,11 @@
             constructor(x, y, special = false) {
                 this.x = x ?? Math.random() * cw * 0.6;
                 this.y = y ?? Math.random() * ch * 0.3;
-                this.len = (cw < 600 ? 60 : 100) + Math.random() * (cw < 600 ? 80 : 140);
-                this.speed = (cw < 600 ? 300 : 400) + Math.random() * (cw < 600 ? 300 : 400);
+                this.len = 80 + Math.random() * 100; // Longitud más corta
+                this.speed = 250 + Math.random() * 250; // Velocidad más baja
                 this.angle = (Math.PI / 4) + (Math.random() - 0.5) * 0.25;
                 this.life = 0;
-                this.maxLife = 0.8 + Math.random() * 0.7;
+                this.maxLife = 0.8 + Math.random() * 0.5;
                 this.opacity = 1;
                 this.special = special;
             }
@@ -142,7 +141,8 @@
                 this.x += Math.cos(this.angle) * this.speed * dt;
                 this.y += Math.sin(this.angle) * this.speed * dt;
                 this.opacity = 1 - (this.life / this.maxLife);
-                if (Math.random() < (cw < 600 ? 0.2 : 0.3)) {
+                // Optimización: Reducir la creación de partículas
+                if (Math.random() < 0.1) {
                     particles.push(new Particle(this.x, this.y, this.special ? this.rainbowColor() : "white"));
                 }
             }
@@ -161,17 +161,13 @@
                 grad.addColorStop(0, this.special ? this.rainbowColor() : "rgba(255,255,255,1)");
                 grad.addColorStop(1, "transparent");
                 ctx.strokeStyle = grad;
-                ctx.lineWidth = cw < 600 ? 1.5 : 2.5;
-                ctx.shadowBlur = cw < 600 ? 10 : 20;
+                ctx.lineWidth = 1.5; // Grosor de línea más delgado
+                ctx.shadowBlur = 10; // Sombra más suave
                 ctx.shadowColor = this.special ? this.rainbowColor() : "white";
                 ctx.beginPath();
                 ctx.moveTo(this.x, this.y);
                 ctx.lineTo(this.x - Math.cos(this.angle) * this.len, this.y - Math.sin(this.angle) * this.len);
                 ctx.stroke();
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, cw < 600 ? 10 : 15, 0, Math.PI * 2);
-                ctx.fillStyle = grad;
-                ctx.fill();
                 ctx.restore();
             }
             get dead() { return this.life >= this.maxLife; }
@@ -181,10 +177,10 @@
         class Flower {
             constructor(angle, height, size) {
                 this.angle = angle;
-                this.height = height * (cw < 600 ? 0.7 : 1); // Reducir altura en móviles
-                this.size = size * (cw < 600 ? 0.7 : 1); // Reducir tamaño en móviles
+                this.height = height;
+                this.size = size;
                 this.growth = 0;
-                this.growthSpeed = 0.45 + Math.random() * 0.3;
+                this.growthSpeed = 0.5 + Math.random() * 0.4;
                 this.exploding = false;
                 this.explosionScale = 1;
                 this.opacity = 1;
@@ -207,7 +203,7 @@
                         this.explosionScale = 1;
                         this.growth = 0;
                         this.regrowDelay = 0.6 + Math.random() * 0.8;
-                        this.growthSpeed = 0.45 + Math.random() * 0.35;
+                        this.growthSpeed = 0.5 + Math.random() * 0.4;
                     }
                 }
             }
@@ -216,13 +212,12 @@
                 if (t <= 0 && !this.exploding) return;
 
                 const radius = this.height * t;
-                const swayOffset = Math.sin(sway + this.angle) * (cw < 600 ? 10 : 20);
+                const swayOffset = Math.sin(sway + this.angle) * 10; // Movimiento más sutil
                 const topX = baseX + Math.cos(this.angle) * radius + swayOffset;
                 const topY = baseY - Math.sin(this.angle) * radius;
 
-                // Tallo
                 ctx.save();
-                ctx.lineWidth = cw < 600 ? 6 : 10;
+                ctx.lineWidth = 6; // Tallo más delgado
                 const gradStem = ctx.createLinearGradient(baseX, baseY, topX, topY);
                 gradStem.addColorStop(0, colors.stemLight);
                 gradStem.addColorStop(0.5, colors.stemDark);
@@ -233,28 +228,17 @@
                 ctx.lineTo(topX, topY);
                 ctx.stroke();
 
-                // Hojas
-                const leafGrad = ctx.createRadialGradient(0, 0, 5, 0, 0, cw < 600 ? 30 : 40);
-                leafGrad.addColorStop(0, colors.leafBright);
-                leafGrad.addColorStop(0.5, colors.leafMid);
-                leafGrad.addColorStop(1, colors.leafDark);
-                ctx.fillStyle = leafGrad;
+                // Optimización: Dibujar hojas de forma simplificada
+                ctx.fillStyle = colors.leafMid;
                 ctx.globalAlpha = 0.9;
-
                 ctx.beginPath();
-                ctx.ellipse((baseX + topX) / 2 - (cw < 600 ? 20 : 28), (baseY + topY) / 2, (cw < 600 ? 28 : 38) * t, (cw < 600 ? 12 : 18) * t, Math.PI / 3, 0, Math.PI * 2);
-                ctx.shadowBlur = cw < 600 ? 10 : 15;
-                ctx.shadowColor = "#1c4d1c";
+                ctx.ellipse((baseX + topX) / 2 - 20, (baseY + topY) / 2, 25 * t, 12 * t, Math.PI / 3, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.beginPath();
-                ctx.ellipse((baseX + topX) / 2 + (cw < 600 ? 20 : 28), (baseY + topY) / 2, (cw < 600 ? 28 : 38) * t, (cw < 600 ? 12 : 18) * t, -Math.PI / 3, 0, Math.PI * 2);
-                ctx.shadowBlur = cw < 600 ? 10 : 15;
-                ctx.shadowColor = "#1c4d1c";
+                ctx.ellipse((baseX + topX) / 2 + 20, (baseY + topY) / 2, 25 * t, 12 * t, -Math.PI / 3, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
 
-                // Pétalos y centro
                 if (t > 0.1 || this.exploding) {
                     ctx.save();
                     ctx.globalAlpha = this.opacity;
@@ -262,22 +246,23 @@
                     ctx.scale(this.explosionScale, this.explosionScale);
 
                     const flowerSize = this.size * Math.max(0.5, t);
-                    for (let i = 0; i < 12; i++) {
+                    // Optimización: Reducir el número de pétalos
+                    for (let i = 0; i < 8; i++) {
                         ctx.save();
-                        ctx.rotate((i * Math.PI) / 6);
+                        ctx.rotate((i * Math.PI) / 4);
                         const petalGrad = ctx.createRadialGradient(0, -flowerSize * 0.7, 2, 0, -flowerSize * 0.7, flowerSize);
                         petalGrad.addColorStop(0, colors.petalLight);
                         petalGrad.addColorStop(0.6, colors.petalMid);
                         petalGrad.addColorStop(1, colors.petalDark);
                         ctx.beginPath();
-                        ctx.ellipse(0, -flowerSize * 0.7, flowerSize * 0.35, flowerSize * 0.8, 0, 0, Math.PI * 2);
+                        ctx.ellipse(0, -flowerSize * 0.7, flowerSize * 0.3, flowerSize * 0.7, 0, 0, Math.PI * 2);
                         ctx.fillStyle = petalGrad;
-                        ctx.shadowBlur = cw < 600 ? 15 : 25;
+                        ctx.shadowBlur = 15; // Sombra más ligera
                         ctx.shadowColor = colors.glow;
                         ctx.fill();
                         ctx.restore();
                     }
-                    const r = flowerSize * 0.45;
+                    const r = flowerSize * 0.4; // Centro más pequeño
                     const g = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r);
                     g.addColorStop(0, colors.center1);
                     g.addColorStop(0.7, colors.center2);
@@ -289,27 +274,27 @@
                     ctx.restore();
                 }
             }
+
             isClicked(x, y, baseX, baseY, sway) {
                 const t = this.growth;
                 const radius = this.height * t;
-                const swayOffset = Math.sin(sway + this.angle) * (cw < 600 ? 10 : 20);
+                const swayOffset = Math.sin(sway + this.angle) * 10;
                 const topX = baseX + Math.cos(this.angle) * radius + swayOffset;
                 const topY = baseY - Math.sin(this.angle) * radius;
                 const dist = Math.hypot(x - topX, y - topY);
-                return dist < this.size * 1.8;
+                return dist < this.size * 1.5; // Área de clic más pequeña
             }
         }
 
         // --- Inicialización ---
         function initFlowers() {
             flowers.length = 0;
-            const count = cw < 600 ? 4 : 6; // Menos flores en móviles
             const spread = Math.PI / 2;
-            for (let i = 0; i < count; i++) {
-                const angle = Math.PI / 4 + (i / (count - 1)) * spread;
-                const extraHeight = (i % 2 === 0) ? (cw < 600 ? 80 : 120) : 0;
-                const h = (cw < 600 ? 180 : 260) + Math.random() * (cw < 600 ? 60 : 80) + extraHeight;
-                const s = (cw < 600 ? 35 : 45) + Math.random() * 20;
+            for (let i = 0; i < FLOWER_COUNT; i++) {
+                const angle = Math.PI / 4 + (i / (FLOWER_COUNT - 1)) * spread;
+                const extraHeight = (i % 2 === 0) ? 80 : 0; // Menos diferencia de altura
+                const h = 200 + Math.random() * 50 + extraHeight;
+                const s = 30 + Math.random() * 10;
                 flowers.push(new Flower(angle, h, s));
             }
         }
@@ -325,73 +310,53 @@
             baseX = cw / 2;
             baseY = ch;
             createStars();
-            shootingStars = Array.from({ length: cw < 600 ? 2 : 3 }, () => new ShootingStar());
+            shootingStars = Array.from({ length: SHOOTING_STAR_COUNT }, () => new ShootingStar());
             initFlowers();
         }
         resize();
         window.addEventListener("resize", resize);
 
         // --- Interacciones ---
-        function handleInteraction(x, y) {
+        canvas.addEventListener("click", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
             const sway = swayTime;
             for (const f of flowers) {
-                if (f.isClicked(x, y, baseX, baseY, sway)) {
+                if (f.isClicked(mouseX, mouseY, baseX, baseY, sway)) {
                     f.exploding = true;
                     f.explosionScale = 1;
                     f.opacity = 1;
-                    for (let i = 0; i < (cw < 600 ? 10 : 20); i++) {
+                    // Añadir menos partículas al explotar
+                    for (let i = 0; i < PARTICLE_CLICK_COUNT; i++) {
                         particles.push(new Particle(baseX + Math.cos(f.angle) * f.height, baseY - Math.sin(f.angle) * f.height, colors.petalLight));
                     }
                 }
             }
             starCounter++;
-            const special = starCounter % 10 === 0;
-            shootingStars.push(new ShootingStar(x, y, special));
-        }
-
-        canvas.addEventListener("click", (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-            handleInteraction(mouseX, mouseY);
-        });
-
-        canvas.addEventListener("touchstart", (e) => {
-            e.preventDefault(); // Evitar desplazamiento
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            const touchX = touch.clientX - rect.left;
-            const touchY = touch.clientY - rect.top;
-            handleInteraction(touchX, touchY);
+            const special = starCounter % 5 === 0; // Más estrellas especiales
+            shootingStars.push(new ShootingStar(mouseX, mouseY, special));
         });
 
         canvas.addEventListener("mousemove", (e) => {
-            if (cw >= 600) { // Solo en PC
-                const rect = canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            // Optimización: Menos partículas con cada movimiento del mouse
+            if (Math.random() < 0.2) {
                 particles.push(new Particle(x, y, "rgba(200,200,255,0.9)"));
             }
         });
 
-        canvas.addEventListener("touchmove", (e) => {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            particles.push(new Particle(x, y, "rgba(200,200,255,0.9)"));
-        });
-
         // --- Generar estrellas fugaces automáticamente ---
         function autoShootingStar() {
-            const cantidad = cw < 600 ? 1 + Math.floor(Math.random() * 2) : 2 + Math.floor(Math.random() * 2);
+            const cantidad = 1;
             for (let i = 0; i < cantidad; i++) {
                 starCounter++;
-                const special = starCounter % 10 === 0;
+                const special = starCounter % 5 === 0;
                 shootingStars.push(new ShootingStar(undefined, undefined, special));
             }
-            const delay = (cw < 600 ? 500 : 300) + Math.random() * 400;
+            const delay = 600 + Math.random() * 800; // Intervalo más largo
             setTimeout(autoShootingStar, delay);
         }
         autoShootingStar();
@@ -404,15 +369,16 @@
         function animate(now) {
             let dt = (now - lastTime) / 1000;
             lastTime = now;
-            if (dt > 0.05) dt = 0.05;
+            // Limitar dt para evitar saltos en la animación con lag
+            if (dt > 0.05) dt = 0.05; 
             swayTime += dt;
 
-            // Subtítulos
+            // ... (el código de los subtítulos es el mismo)
             const currentTime = audio.currentTime;
             let foundSubtitle = false;
-            for (let i = 0; i < lyricsData.length; i++) {
-                if (currentTime >= lyricsData[i].start && currentTime < lyricsData[i].end) {
-                    if (currentSubtitleIndex !== i) {
+            for(let i = 0; i < lyricsData.length; i++) {
+                if(currentTime >= lyricsData[i].start && currentTime < lyricsData[i].end) {
+                    if(currentSubtitleIndex !== i) {
                         subtitlesDiv.textContent = lyricsData[i].text;
                         subtitlesDiv.classList.add('active');
                         currentSubtitleIndex = i;
@@ -427,6 +393,7 @@
                 currentSubtitleIndex = -1;
             }
 
+            // Dibuja el fondo, estrellas, estrellas fugaces y flores
             const grad = ctx.createLinearGradient(0, 0, 0, ch);
             grad.addColorStop(0, colors.sky1);
             grad.addColorStop(0.25, colors.sky2);
@@ -446,12 +413,17 @@
             }
             ctx.globalAlpha = 1;
 
-            shootingStars.forEach(s => { s.update(dt); s.draw(ctx); });
-            shootingStars = shootingStars.filter(s => !s.dead);
+            // Optimización: solo actualiza si hay elementos
+            if (shootingStars.length > 0) {
+                shootingStars.forEach(s => { s.update(dt); s.draw(ctx); });
+                shootingStars = shootingStars.filter(s => !s.dead);
+            }
 
-            particles.forEach(p => { p.update(dt); p.draw(ctx); });
-            particles = particles.filter(p => !p.dead);
-
+            if (particles.length > 0) {
+                particles.forEach(p => { p.update(dt); p.draw(ctx); });
+                particles = particles.filter(p => !p.dead);
+            }
+            
             const sway = swayTime * 1.6;
             for (const f of flowers) {
                 f.update(dt);
@@ -464,13 +436,7 @@
 
         document.addEventListener('click', () => {
             if (audio.paused) {
-                audio.play().catch(err => console.log("Error playing audio:", err));
-            }
-        }, { once: true });
-
-        document.addEventListener('touchstart', () => {
-            if (audio.paused) {
-                audio.play().catch(err => console.log("Error playing audio:", err));
+                audio.play();
             }
         }, { once: true });
     </script>
