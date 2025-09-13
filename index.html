@@ -5,11 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Abanico de girasoles - Optimizado</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { height:100%; }
-        body { background: black; overflow: hidden; }
-        canvas { display:block; width:100%; height:100vh; cursor: crosshair; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background: black;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+            cursor: crosshair;
+        }
+
         #subtitles {
             position: absolute;
             top: 5%;
@@ -19,13 +36,13 @@
             text-align: center;
             color: #fff799;
             font-family: sans-serif;
-            font-size: 1.2rem; /* Tamaño de fuente más pequeño para móviles */
-            text-shadow: 1px 1px 2px #000; /* Sombra más ligera */
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px #000;
             z-index: 10;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
-        
+
         #subtitles.active {
             opacity: 1;
         }
@@ -35,26 +52,24 @@
     <canvas id="scene"></canvas>
     <audio id="background-music" src="musica.mp3" loop></audio>
     <div id="subtitles"></div>
-
     <script>
         const canvas = document.getElementById("scene");
-        const ctx = canvas.getContext("2d"); // No es necesario { alpha: false } si el fondo ya es negro
+        const ctx = canvas.getContext("2d");
         const audio = document.getElementById("background-music");
         const subtitlesDiv = document.getElementById("subtitles");
 
-        // Optimización: Reducir la resolución interna del canvas para menos píxeles a renderizar
-        const dpr = Math.min(1.5, window.devicePixelRatio || 1); 
-
+        // Optimización: Limitar el dpr para mejor rendimiento en móviles
+        const dpr = Math.min(1.5, window.devicePixelRatio || 1);
         let cw = window.innerWidth;
         let ch = window.innerHeight;
         let baseX, baseY;
 
-        // Optimización: Reducir la cantidad de estrellas y elementos
-        const STAR_COUNT = 100;
+        // Reducción de elementos para mejor rendimiento
+        const STAR_COUNT = 80;
         const SHOOTING_STAR_COUNT = 1;
-        const FLOWER_COUNT = 4;
-        const PARTICLE_CLICK_COUNT = 10;
-        const PARTICLE_MOUSE_COUNT = 1; // Reducido para evitar lag al mover el mouse
+        const FLOWER_COUNT = 7; // CAMBIO: Aumentamos a 7 flores
+        const PARTICLE_CLICK_COUNT = 8; // Reducción
+        const PARTICLE_MOUSE_COUNT = 0.1; // Reducción
 
         const stars = [];
         let shootingStars = [];
@@ -62,20 +77,68 @@
         const flowers = [];
 
         const colors = {
-            sky1: "#0a0220", sky2: "#120a40",
-            sky3: "#1b1035", sky4: "#241a2e",
+            sky1: "#0a0220",
+            sky2: "#120a40",
+            sky3: "#1b1035",
+            sky4: "#241a2e",
             horizon: "#3a1d1d",
-            stemLight: "#3ba55d", stemDark: "#0a1f0a",
-            leafBright: "#4caf50", leafMid: "#2e7d32", leafDark: "#0a2f12",
-            petalLight: "#fff799", petalMid: "#ffe066", petalDark: "#ffcc00",
-            center1: "#e6b53a", center2: "#5a3a00",
+            stemLight: "#3ba55d",
+            stemDark: "#0a1f0a",
+            leafBright: "#4caf50",
+            leafMid: "#2e7d32",
+            leafDark: "#0a2f12",
+            petalLight: "#fff799",
+            petalMid: "#ffe066",
+            petalDark: "#ffcc00",
+            center1: "#e6b53a",
+            center2: "#5a3a00",
             glow: "rgba(255,255,200,0.95)"
         };
 
         const lyricsData = [
             { text: "날 스치는 그대의 옅은 그 목소리\n(Tu voz tenue que me roza)", start: 0.0, end: 4.0 },
             { text: "내 이름을 한 번만 더 불러주세요\n(Por favor, llama mi nombre una vez más)", start: 4.5, end: 8.5 },
-            // ... (resto de los datos)
+            { text: "얼어버린 노을 아래 멈춰 서있지만\n(Aunque estoy parado bajo el atardecer congelado)", start: 9.0, end: 13.0 },
+            { text: "그대 향해 한 걸음씩 걸어갈래요\n(Caminaré hacia ti paso a paso)", start: 13.5, end: 17.5 },
+            { text: "어두운 방 조명 하나 없이\n(En la habitación oscura sin una sola luz)", start: 18.0, end: 22.0 },
+            { text: "익숙해지면 안 되는데\n(Aunque no debería acostumbrarme)", start: 22.5, end: 26.5 },
+            { text: "그게 또 익숙해\n(Pero se siente familiar de nuevo)", start: 27.0, end: 31.0 },
+            { text: "나지막이 들리는 이 에어컨 소리\n(El sutil sonido del aire acondicionado)", start: 31.5, end: 35.5 },
+            { text: "이거라도 없으면 나 정말 무너질 것 같아\n(Si no tuviera ni esto, creo que me derrumbaría)", start: 36.0, end: 40.0 },
+            { text: "함께 웃고 함께 울고\n(Riendo juntos, llorando juntos)", start: 40.5, end: 44.5 },
+            { text: "이 단순한 감정들이\n(Estas simples emociones)", start: 45.0, end: 49.0 },
+            { text: "내겐 전부였나봐\n(quizás eran todo para mí)", start: 49.5, end: 53.5 },
+            { text: "언제쯤일까\n(¿Cuándo será?)", start: 54.0, end: 58.0 },
+            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 58.5, end: 62.5 },
+            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 63.0, end: 67.0 },
+            { text: "보고 싶었어요\n(Te he extrañado)", start: 67.5, end: 71.5 },
+            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 72.0, end: 76.0 },
+            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 76.5, end: 80.5 },
+            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 81.0, end: 85.0 },
+            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 85.5, end: 89.5 },
+            { text: "그때 날 안아줘\n(Abrázame entonces)", start: 90.0, end: 94.0 },
+            { text: "저 달이 외로워 보여서\n(Porque la luna parecía solitaria)", start: 94.5, end: 98.5 },
+            { text: "밤하늘에 환하게 울고 있는 것 같아서\n(Parecía llorar brillantemente en el cielo nocturno)", start: 99.0, end: 103.0 },
+            { text: "언젠가 아침이 오는 걸 알면서도\n(Sabiendo que algún día llegaría la mañana)", start: 103.5, end: 107.5 },
+            { text: "별처럼 너의 하늘에 머물고 싶었어\n(Quería quedarme en tu cielo como una estrella)", start: 108.0, end: 112.0 },
+            { text: "하루를 그 순간을\n(Ese día, ese momento)", start: 112.5, end: 116.5 },
+            { text: "이렇게 될 걸 알았다면\n(Si hubiera sabido que sería así)", start: 117.0, end: 121.0 },
+            { text: "더 담아뒀을 텐데\n(Los habría guardado más en mis recuerdos)", start: 121.5, end: 125.5 },
+            { text: "언제쯤일까\n(¿Cuándo será?)", start: 126.0, end: 130.0 },
+            { text: "다시 그댈 마주한다면\n(Cuando te vuelva a ver)", start: 130.5, end: 134.5 },
+            { text: "눈을 보고 말할래요\n(Te miraré a los ojos y te lo diré)", start: 135.0, end: 139.0 },
+            { text: "보고 싶었어요\n(Te he extrañado)", start: 139.5, end: 143.5 },
+            { text: "황홀했던 기억 속에\n(En los recuerdos encantadores)", start: 144.0, end: 148.0 },
+            { text: "나 홀로 춤을 춰도 비가 내리잖아\n(Aunque baile solo, sigue lloviendo)", start: 148.5, end: 152.5 },
+            { text: "이 안개가 걷힐 때쯤\n(Cuando esta niebla se levante)", start: 153.0, end: 157.0 },
+            { text: "젖은 발로 달려갈게\n(Correré hacia ti con mis pies mojados)", start: 157.5, end: 161.5 },
+            { text: "그때 날 잡아줘\n(Abrázame entonces)", start: 162.0, end: 166.0 },
+            { text: "날 바라보는 희미한 미소 뒤편에\n(Detrás de tu tenue sonrisa al mirarme)", start: 166.5, end: 170.5 },
+            { text: "아름다운 보랏빛을 그려볼래요\n(Quiero pintar un hermoso color púrpura)", start: 171.0, end: 175.0 },
+            { text: "서로 발걸음이 안 맞을 수도 있지만\n(Aunque nuestros pasos no coincidan)", start: 175.5, end: 179.5 },
+            { text: "그대와 함께 이 길을 걷고 싶어요\n(Quiero caminar este camino contigo)", start: 180.0, end: 184.0 },
+            { text: "Still With You\n(Aún contigo)", start: 184.5, end: 188.5 },
+            { text: "Still With You\n(Aún contigo)", start: 189.0, end: 193.0 }
         ];
 
         // --- Utilidades ---
@@ -85,7 +148,7 @@
                 stars.push({
                     x: Math.random() * cw,
                     y: Math.random() * ch,
-                    r: Math.random() * 0.8, // Radios más pequeños
+                    r: Math.random() * 0.8,
                     alpha: 0.25 + Math.random() * 0.75
                 });
             }
@@ -96,19 +159,20 @@
             constructor(x, y, color = "white") {
                 this.x = x;
                 this.y = y;
-                // Optimización: Velocidades más bajas para menos movimiento
-                this.vx = (Math.random() - 0.5) * 50; 
+                this.vx = (Math.random() - 0.5) * 50;
                 this.vy = (Math.random() - 0.5) * 50;
                 this.life = 0;
                 this.maxLife = 0.5 + Math.random() * 0.5;
-                this.size = 1 + Math.random(); // Tamaño más pequeño
+                this.size = 1 + Math.random();
                 this.color = color;
             }
+
             update(dt) {
                 this.life += dt;
                 this.x += this.vx * dt;
                 this.y += this.vy * dt;
             }
+
             draw(ctx) {
                 const alpha = 1 - (this.life / this.maxLife);
                 if (alpha <= 0) return;
@@ -119,7 +183,10 @@
                 ctx.fill();
                 ctx.globalAlpha = 1;
             }
-            get dead() { return this.life >= this.maxLife; }
+
+            get dead() {
+                return this.life >= this.maxLife;
+            }
         }
 
         // --- Estrella fugaz ---
@@ -128,41 +195,44 @@
             constructor(x, y, special = false) {
                 this.x = x ?? Math.random() * cw * 0.6;
                 this.y = y ?? Math.random() * ch * 0.3;
-                this.len = 80 + Math.random() * 100; // Longitud más corta
-                this.speed = 250 + Math.random() * 250; // Velocidad más baja
+                this.len = 80 + Math.random() * 100;
+                this.speed = 250 + Math.random() * 250;
                 this.angle = (Math.PI / 4) + (Math.random() - 0.5) * 0.25;
                 this.life = 0;
                 this.maxLife = 0.8 + Math.random() * 0.5;
                 this.opacity = 1;
                 this.special = special;
             }
+
             update(dt) {
                 this.life += dt;
                 this.x += Math.cos(this.angle) * this.speed * dt;
                 this.y += Math.sin(this.angle) * this.speed * dt;
                 this.opacity = 1 - (this.life / this.maxLife);
-                // Optimización: Reducir la creación de partículas
                 if (Math.random() < 0.1) {
                     particles.push(new Particle(this.x, this.y, this.special ? this.rainbowColor() : "white"));
                 }
             }
+
             rainbowColor() {
                 const hue = (Date.now() / 20) % 360;
                 return `hsl(${hue}, 100%, 70%)`;
             }
+
             draw(ctx) {
                 ctx.save();
                 ctx.globalAlpha = Math.max(0, this.opacity);
                 const grad = ctx.createLinearGradient(
-                    this.x, this.y,
+                    this.x,
+                    this.y,
                     this.x - Math.cos(this.angle) * this.len,
                     this.y - Math.sin(this.angle) * this.len
                 );
                 grad.addColorStop(0, this.special ? this.rainbowColor() : "rgba(255,255,255,1)");
                 grad.addColorStop(1, "transparent");
                 ctx.strokeStyle = grad;
-                ctx.lineWidth = 1.5; // Grosor de línea más delgado
-                ctx.shadowBlur = 10; // Sombra más suave
+                ctx.lineWidth = 1.5;
+                ctx.shadowBlur = 10;
                 ctx.shadowColor = this.special ? this.rainbowColor() : "white";
                 ctx.beginPath();
                 ctx.moveTo(this.x, this.y);
@@ -170,15 +240,19 @@
                 ctx.stroke();
                 ctx.restore();
             }
-            get dead() { return this.life >= this.maxLife; }
+
+            get dead() {
+                return this.life >= this.maxLife;
+            }
         }
 
         // --- Flor con tallo y hojas ---
         class Flower {
-            constructor(angle, height, size) {
+            constructor(angle, height, size, swayPhase) {
                 this.angle = angle;
                 this.height = height;
                 this.size = size;
+                this.swayPhase = swayPhase;
                 this.growth = 0;
                 this.growthSpeed = 0.5 + Math.random() * 0.4;
                 this.exploding = false;
@@ -186,6 +260,7 @@
                 this.opacity = 1;
                 this.regrowDelay = 0;
             }
+
             update(dt) {
                 if (this.regrowDelay > 0) {
                     this.regrowDelay = Math.max(0, this.regrowDelay - dt);
@@ -207,17 +282,19 @@
                     }
                 }
             }
+
             draw(ctx, baseX, baseY, sway) {
                 const t = this.growth;
                 if (t <= 0 && !this.exploding) return;
 
                 const radius = this.height * t;
-                const swayOffset = Math.sin(sway + this.angle) * 10; // Movimiento más sutil
+                const swayOffset = Math.sin(sway + this.swayPhase) * 10;
                 const topX = baseX + Math.cos(this.angle) * radius + swayOffset;
                 const topY = baseY - Math.sin(this.angle) * radius;
 
+                // Tallo
                 ctx.save();
-                ctx.lineWidth = 6; // Tallo más delgado
+                ctx.lineWidth = 6;
                 const gradStem = ctx.createLinearGradient(baseX, baseY, topX, topY);
                 gradStem.addColorStop(0, colors.stemLight);
                 gradStem.addColorStop(0.5, colors.stemDark);
@@ -227,17 +304,20 @@
                 ctx.moveTo(baseX, baseY);
                 ctx.lineTo(topX, topY);
                 ctx.stroke();
+                ctx.restore();
 
-                // Optimización: Dibujar hojas de forma simplificada
+                // Hojas (Simplificadas)
+                ctx.save();
                 ctx.fillStyle = colors.leafMid;
                 ctx.globalAlpha = 0.9;
                 ctx.beginPath();
-                ctx.ellipse((baseX + topX) / 2 - 20, (baseY + topY) / 2, 25 * t, 12 * t, Math.PI / 3, 0, Math.PI * 2);
+                ctx.ellipse(baseX + (topX - baseX) * 0.5 - 20, baseY + (topY - baseY) * 0.5, 25 * t, 12 * t, Math.PI / 3, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.beginPath();
-                ctx.ellipse((baseX + topX) / 2 + 20, (baseY + topY) / 2, 25 * t, 12 * t, -Math.PI / 3, 0, Math.PI * 2);
+                ctx.ellipse(baseX + (topX - baseX) * 0.5 + 20, baseY + (topY - baseY) * 0.5, 25 * t, 12 * t, -Math.PI / 3, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
+
 
                 if (t > 0.1 || this.exploding) {
                     ctx.save();
@@ -246,7 +326,8 @@
                     ctx.scale(this.explosionScale, this.explosionScale);
 
                     const flowerSize = this.size * Math.max(0.5, t);
-                    // Optimización: Reducir el número de pétalos
+
+                    // Pétalos
                     for (let i = 0; i < 8; i++) {
                         ctx.save();
                         ctx.rotate((i * Math.PI) / 4);
@@ -257,12 +338,14 @@
                         ctx.beginPath();
                         ctx.ellipse(0, -flowerSize * 0.7, flowerSize * 0.3, flowerSize * 0.7, 0, 0, Math.PI * 2);
                         ctx.fillStyle = petalGrad;
-                        ctx.shadowBlur = 15; // Sombra más ligera
+                        ctx.shadowBlur = 15;
                         ctx.shadowColor = colors.glow;
                         ctx.fill();
                         ctx.restore();
                     }
-                    const r = flowerSize * 0.4; // Centro más pequeño
+
+                    // Centro de la flor
+                    const r = flowerSize * 0.4;
                     const g = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r);
                     g.addColorStop(0, colors.center1);
                     g.addColorStop(0.7, colors.center2);
@@ -278,24 +361,26 @@
             isClicked(x, y, baseX, baseY, sway) {
                 const t = this.growth;
                 const radius = this.height * t;
-                const swayOffset = Math.sin(sway + this.angle) * 10;
+                const swayOffset = Math.sin(sway + this.swayPhase) * 10;
                 const topX = baseX + Math.cos(this.angle) * radius + swayOffset;
                 const topY = baseY - Math.sin(this.angle) * radius;
                 const dist = Math.hypot(x - topX, y - topY);
-                return dist < this.size * 1.5; // Área de clic más pequeña
+                return dist < this.size * 1.5;
             }
         }
 
         // --- Inicialización ---
         function initFlowers() {
             flowers.length = 0;
-            const spread = Math.PI / 2;
+            const spread = Math.PI / 2.2; // CAMBIO: Ángulo de dispersión ajustado para más flores
+            const startAngle = (Math.PI / 2) - (spread / 2);
+
             for (let i = 0; i < FLOWER_COUNT; i++) {
-                const angle = Math.PI / 4 + (i / (FLOWER_COUNT - 1)) * spread;
-                const extraHeight = (i % 2 === 0) ? 80 : 0; // Menos diferencia de altura
-                const h = 200 + Math.random() * 50 + extraHeight;
+                const angle = startAngle + (i / (FLOWER_COUNT - 1)) * spread;
+                const h = 200 + Math.random() * 80;
                 const s = 30 + Math.random() * 10;
-                flowers.push(new Flower(angle, h, s));
+                const swayPhase = Math.random() * Math.PI * 2;
+                flowers.push(new Flower(angle, h, s, swayPhase));
             }
         }
 
@@ -327,23 +412,21 @@
                     f.exploding = true;
                     f.explosionScale = 1;
                     f.opacity = 1;
-                    // Añadir menos partículas al explotar
                     for (let i = 0; i < PARTICLE_CLICK_COUNT; i++) {
                         particles.push(new Particle(baseX + Math.cos(f.angle) * f.height, baseY - Math.sin(f.angle) * f.height, colors.petalLight));
                     }
                 }
             }
-            starCounter++;
-            const special = starCounter % 5 === 0; // Más estrellas especiales
-            shootingStars.push(new ShootingStar(mouseX, mouseY, special));
+            // starCounter++;
+            // const special = starCounter % 5 === 0;
+            // shootingStars.push(new ShootingStar(mouseX, mouseY, special));
         });
 
         canvas.addEventListener("mousemove", (e) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            // Optimización: Menos partículas con cada movimiento del mouse
-            if (Math.random() < 0.2) {
+            if (Math.random() < PARTICLE_MOUSE_COUNT) {
                 particles.push(new Particle(x, y, "rgba(200,200,255,0.9)"));
             }
         });
@@ -356,7 +439,7 @@
                 const special = starCounter % 5 === 0;
                 shootingStars.push(new ShootingStar(undefined, undefined, special));
             }
-            const delay = 600 + Math.random() * 800; // Intervalo más largo
+            const delay = 1000 + Math.random() * 1000;
             setTimeout(autoShootingStar, delay);
         }
         autoShootingStar();
@@ -369,16 +452,16 @@
         function animate(now) {
             let dt = (now - lastTime) / 1000;
             lastTime = now;
-            // Limitar dt para evitar saltos en la animación con lag
-            if (dt > 0.05) dt = 0.05; 
+            if (dt > 0.05) dt = 0.05;
+
             swayTime += dt;
 
-            // ... (el código de los subtítulos es el mismo)
+            // Lógica de subtítulos
             const currentTime = audio.currentTime;
             let foundSubtitle = false;
-            for(let i = 0; i < lyricsData.length; i++) {
-                if(currentTime >= lyricsData[i].start && currentTime < lyricsData[i].end) {
-                    if(currentSubtitleIndex !== i) {
+            for (let i = 0; i < lyricsData.length; i++) {
+                if (currentTime >= lyricsData[i].start && currentTime < lyricsData[i].end) {
+                    if (currentSubtitleIndex !== i) {
                         subtitlesDiv.textContent = lyricsData[i].text;
                         subtitlesDiv.classList.add('active');
                         currentSubtitleIndex = i;
@@ -393,7 +476,7 @@
                 currentSubtitleIndex = -1;
             }
 
-            // Dibuja el fondo, estrellas, estrellas fugaces y flores
+            // Dibujar fondo
             const grad = ctx.createLinearGradient(0, 0, 0, ch);
             grad.addColorStop(0, colors.sky1);
             grad.addColorStop(0.25, colors.sky2);
@@ -403,6 +486,7 @@
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, cw, ch);
 
+            // Dibujar estrellas
             ctx.globalAlpha = 1;
             ctx.fillStyle = "white";
             for (const s of stars) {
@@ -411,19 +495,22 @@
                 ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
                 ctx.fill();
             }
-            ctx.globalAlpha = 1;
 
-            // Optimización: solo actualiza si hay elementos
-            if (shootingStars.length > 0) {
-                shootingStars.forEach(s => { s.update(dt); s.draw(ctx); });
-                shootingStars = shootingStars.filter(s => !s.dead);
-            }
+            // Actualizar y dibujar estrellas fugaces
+            shootingStars = shootingStars.filter(s => {
+                s.update(dt);
+                s.draw(ctx);
+                return !s.dead;
+            });
 
-            if (particles.length > 0) {
-                particles.forEach(p => { p.update(dt); p.draw(ctx); });
-                particles = particles.filter(p => !p.dead);
-            }
-            
+            // Actualizar y dibujar partículas
+            particles = particles.filter(p => {
+                p.update(dt);
+                p.draw(ctx);
+                return !p.dead;
+            });
+
+            // Actualizar y dibujar flores
             const sway = swayTime * 1.6;
             for (const f of flowers) {
                 f.update(dt);
@@ -432,6 +519,7 @@
 
             requestAnimationFrame(animate);
         }
+
         requestAnimationFrame(animate);
 
         document.addEventListener('click', () => {
