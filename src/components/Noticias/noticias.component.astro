@@ -1,0 +1,89 @@
+﻿---
+// src/components/noticias/NewsPage.astro
+import {
+    todasLasNoticias,
+    filtros,
+} from "./data/noticias";
+import { mapaImagenes } from "./data/imagenes";
+import NewsHero from "./components/noticiasBanner.astro";
+import FeaturedNews from "./components/noticiasDestacadasContenedor.astro";
+import NewsFilters from "./components/noticiasFiltros.astro";
+import NewsGrid from "./components/noticiasGrid.astro";
+import NewsPagination from "./components/noticiasPaginacion.astro";
+
+const noticiasDestacadas = todasLasNoticias.filter((n) => n.destacada);
+const [principalDestacada, ...secundariasDestacadas] = noticiasDestacadas;
+
+const noticiasSerializadas = JSON.stringify(todasLasNoticias);
+const imagenesSerializadas = JSON.stringify(
+    Object.keys(mapaImagenes).reduce(
+        (acc, key) => ({
+            ...acc,
+            [key]:
+                mapaImagenes[key as keyof typeof mapaImagenes]?.src ||
+                mapaImagenes.default.src,
+        }),
+        {},
+    ),
+);
+const filtrosSerializados = JSON.stringify(filtros);
+---
+
+<div
+    x-data="newsApp()"
+    x-init="init()"
+    class="bg-[#F5F5F5]"
+    x-cloak
+    :class="{ 'opacity-0': !isReady, 'opacity-100': isReady }"
+    data-noticias={noticiasSerializadas}
+    data-imagenes={imagenesSerializadas}
+    data-filtros={filtrosSerializados}
+>
+    <NewsHero />
+    <NewsFilters />
+    <FeaturedNews
+        principal={principalDestacada}
+        secundarias={secundariasDestacadas}
+    />
+
+    <NewsGrid>
+        <NewsPagination />
+    </NewsGrid>
+</div>
+
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>
+
+<script>
+    import newsApp from "./noticiasApp.js";
+
+    type AlpineDataRegistrar = {
+        data: (name: string, callback: typeof newsApp) => void;
+    };
+
+    type WindowWithAlpine = Window & typeof globalThis & {
+        Alpine?: AlpineDataRegistrar;
+    };
+
+    if (typeof window !== "undefined") {
+        const browserWindow = window as WindowWithAlpine;
+
+        document.addEventListener("alpine:init", () => {
+            console.log("Registrando newsApp en alpine:init");
+            browserWindow.Alpine?.data("newsApp", newsApp);
+        });
+
+        if (browserWindow.Alpine) {
+            console.log("Alpine ya existe, registrando directamente");
+            browserWindow.Alpine.data("newsApp", newsApp);
+        } else {
+            const alpineScript = document.createElement("script");
+            alpineScript.defer = true;
+            alpineScript.src = "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js";
+            document.head.appendChild(alpineScript);
+        }
+    }
+</script>

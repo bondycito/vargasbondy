@@ -1,0 +1,24 @@
+---
+// src/components/noticias/NewsFilters.astro
+---
+
+<div class="bg-white border-b border-gray-100">
+    <div class="container-shell py-5">
+        <div class="flex flex-wrap gap-2.5 items-center">
+            <span
+                class="font-heading font-black text-[10px] text-gray-400 tracking-[4px] uppercase mr-2 whitespace-nowrap"
+            >
+                FILTRAR POR:
+            </span>
+            <template x-for="filtro in filtrosDisponibles" :key="filtro">
+                <button
+                    @click="cambiarFiltro(filtro)"
+                    class="font-heading font-black text-[11px] tracking-[2px] uppercase px-5 py-2 rounded-full border-2 transition-all duration-200 whitespace-nowrap"
+                    :class="filtroActivo === filtro ? 'border-brand-garnet bg-brand-garnet text-white' : 'border-gray-300 text-gray-600 hover:border-brand-gold hover:text-brand-gold'"
+                    x-text="filtro"
+                >
+                </button>
+            </template>
+        </div>
+    </div>
+</div>

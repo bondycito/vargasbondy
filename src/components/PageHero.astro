@@ -1,0 +1,20 @@
+﻿---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+}
+
+const { eyebrow = "Club Chankas CYC", title, subtitle } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="container-shell relative py-20 sm:py-28 md:py-32">
+    <div class="gold-rule absolute inset-x-0 bottom-0 h-[3px]"></div>
+    <div class="max-w-4xl">
+      <span class="eyebrow">{eyebrow}</span>
+      <h1 class="mt-5 font-display text-4xl leading-[0.92] tracking-[0.1em] text-white sm:mt-6 sm:text-6xl sm:tracking-[0.14em] md:text-8xl md:tracking-[0.16em]">{title}</h1>
+      {subtitle && <p class="mt-4 max-w-2xl text-sm leading-6 text-white/70 sm:mt-5 sm:text-lg sm:leading-7">{subtitle}</p>}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,94 @@
+﻿---
+import ClubCrest from "./ClubCrest.astro";
+import { navItems } from "../data/site";
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-white/8 bg-[rgba(111,22,24,0.92)] backdrop-blur-xl">
+  <div class="container-shell flex h-[5.1rem] items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-3 no-underline">
+      <div class="rounded-2xl border border-brand-gold/15 bg-white/5 p-2">
+        <ClubCrest size={42} />
+      </div>
+      <div class="leading-none">
+        <div class="font-display text-[1.9rem] tracking-[0.16em] text-brand-gold">CHANKAS</div>
+        <div class="mt-1 font-heading text-[0.62rem] font-bold uppercase tracking-[0.34em] text-white/78">CYC</div>
+      </div>
+    </a>
+
+    <nav class="hidden items-center gap-2 lg:flex">
+      {
+        navItems.map((item) => {
+          const active = pathname === item.href;
+          return (
+            <a
+              href={item.href}
+              class:list={[
+                "rounded-full px-4 py-2.5 font-heading text-[0.72rem] font-bold uppercase tracking-[0.14em] no-underline transition",
+                active
+                  ? "bg-white/10 text-brand-gold shadow-[inset_0_0_0_1px_rgba(255,164,0,0.16)]"
+                  : "text-white/78 hover:bg-white/8 hover:text-white",
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <div class="hidden lg:block">
+      <a href="/socios" class="button-primary rounded-full px-6 py-3">Únete ahora</a>
+    </div>
+
+    <button
+      id="menu-toggle"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/8 text-brand-gold shadow-[0_8px_22px_rgba(0,0,0,0.18)] lg:hidden"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      type="button"
+    >
+      <span class="text-xl">&#9776;</span>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-white/8 bg-[rgba(86,15,17,0.98)] lg:hidden">
+    <div class="container-shell py-4">
+      <div class="flex flex-col gap-2 rounded-[1.5rem] border border-white/8 bg-white/[0.04] p-3 shadow-[0_18px_36px_rgba(0,0,0,0.2)]">
+        {
+          navItems.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <a
+                href={item.href}
+                class:list={[
+                  "rounded-2xl px-4 py-3 font-heading text-sm font-bold uppercase tracking-[0.14em] no-underline transition",
+                  active
+                    ? "bg-brand-gold text-brand-ink"
+                    : "text-white/80 hover:bg-white/6 hover:text-white",
+                ]}
+              >
+                {item.label}
+              </a>
+            );
+          })
+        }
+        <a href="/socios" class="button-primary mt-2 w-full rounded-2xl">Únete ahora</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  if (toggle && menu) {
+    toggle.addEventListener("click", () => {
+      const open = !menu.classList.contains("hidden");
+      menu.classList.toggle("hidden", open);
+      toggle.setAttribute("aria-expanded", String(!open));
+      toggle.innerHTML = `<span class="text-xl">${open ? "&#9776;" : "&times;"}</span>`;
+    });
+  }
+</script>

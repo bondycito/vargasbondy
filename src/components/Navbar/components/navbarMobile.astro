@@ -1,0 +1,27 @@
+---
+// src/components/Header/MobileMenu.astro
+import type { NavLink } from "../data/navbarLinks";
+import NavLinks from "./navbarLinks.astro";
+
+interface Props {
+  links: NavLink[];
+  isActive: (to: string) => boolean;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+const { links, isActive, ctaLabel, ctaHref } = Astro.props;
+---
+
+<div id="mobile-menu" style="display: none;">
+  <div
+    style="background-color: #7A1A1C; border-top: 1px solid rgba(255,164,0,0.3);"
+  >
+    <div class="px-4 py-4 flex flex-col gap-2">
+      <NavLinks links={links} isActive={isActive} variant="mobile" />
+      <a href={ctaHref} class="mobile-cta-button">
+        {ctaLabel}
+      </a>
+    </div>
+  </div>
+</div>

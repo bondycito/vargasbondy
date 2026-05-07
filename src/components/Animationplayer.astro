@@ -1,0 +1,138 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+}
+
+const { eyebrow = "Club Chankas CYC", title, subtitle } = Astro.props;
+---
+
+<section class="hero-elegant-container page-hero relative w-full overflow-x-clip overflow-y-visible">
+  
+  <div class="container-shell relative z-20 py-28 sm:py-32 h-full flex flex-col justify-center">
+    <div class="max-w-4xl">
+      <span class="eyebrow block font-bold tracking-[0.2em] text-[#ceab5d] uppercase text-sm sm:text-base">
+        {eyebrow}
+      </span>
+      <h1 class="mt-6 font-display text-6xl leading-none tracking-[0.16em] text-white sm:text-7xl md:text-8xl uppercase">
+        {title}
+      </h1>
+      {subtitle && (
+        <p class="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
+          {subtitle}
+        </p>
+      )}
+    </div>
+  </div>
+
+  <div class="player-visual-group">
+    <img src="../../public/jugadores_animacion/Oshiro takeuchi.png" class="player-img p-side" id="hero-p1" alt="Jugador">
+    <img src="../../public/jugadores_animacion/Hairo Camacho.png" class="player-img p-main" id="hero-p2" alt="Jugador">
+    <img src="../../public/jugadores_animacion/Franco_Torres.png" class="player-img p-side-right" id="hero-p3" alt="Jugador">
+  </div>
+
+  <div class="gold-rule absolute inset-x-0 bottom-0 h-[3px] bg-[#ceab5d] z-30"></div>
+    
+</section>
+
+<style>
+  /* Fondo original sin forzar alturas (min-height eliminado) */
+  .hero-elegant-container {
+    background: linear-gradient(135deg, #911f21 0%, #5b1115 100%);
+  }
+
+  .player-visual-group {
+    position: absolute;
+    right: 5%;
+    bottom: 0; 
+    width: 45%;
+    height: 100%; 
+    pointer-events: none;
+    z-index: 10;
+    --target-opacity: 1; 
+  }
+
+  /* Estado inicial: invisibles y abajo */
+  .player-img {
+    position: absolute;
+    bottom: -10px;
+    object-fit: contain;
+    opacity: 0;
+    transform: translateY(80px) scale(0.85);
+  }
+
+  .is-animated .player-img {
+    animation: dramaticEntrance 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  .is-animated #hero-p2 { animation-delay: 0.1s; } 
+  .is-animated #hero-p1 { animation-delay: 0.3s; } 
+  .is-animated #hero-p3 { animation-delay: 0.4s; } 
+
+  @keyframes dramaticEntrance {
+    0% {
+      opacity: 0;
+      transform: translateY(80px) scale(0.85);
+    }
+    100% {
+      opacity: var(--target-opacity);
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .p-main { z-index: 5; right: 15%; height: 100%; }
+  .p-side { z-index: 4; right: 40%; height: 85%; }
+  .p-side-right { z-index: 4; right: -5%; height: 85%; }
+
+  @media (max-width: 1024px) {
+    .player-visual-group { width: 60%; }
+  }
+
+  @media (max-width: 768px) {
+    .player-visual-group { 
+      width: 100%; 
+      right: 0;
+      left: 0; /* Aseguramos que cubra todo el ancho horizontalmente */
+      z-index: 0; 
+      --target-opacity: 0.35; /* Opacidad intacta */
+    }
+
+    /* Centrado absoluto de la imagen principal */
+    .p-main { 
+      left: 0; 
+      right: 0; 
+      margin: 0 auto; 
+      height: 115%; 
+    }
+    
+    /* Centrado desplazado a la izquierda */
+    .p-side { 
+      left: 0; 
+      right: 40%; 
+      margin: 0 auto; 
+      height: 80%; 
+    }
+    
+    /* Centrado desplazado a la derecha */
+    .p-side-right { 
+      left: 40%; 
+      right: 0; 
+      margin: 0 auto; 
+      height: 80%; 
+    }
+  }
+</style>
+
+<script>
+  function triggerAnimation() {
+    const group = document.querySelector('.player-visual-group');
+    if (group) {
+      setTimeout(() => {
+        group.classList.add('is-animated');
+      }, 100);
+    }
+  }
+
+  triggerAnimation();
+</script>

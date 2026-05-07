@@ -1,0 +1,31 @@
+---
+// src/components/noticias/NewsHero.astro
+---
+
+<section
+    class="page-hero relative h-[300px] flex flex-col items-center justify-center overflow-hidden pt-20"
+>
+    <div
+        class="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-brand-gold to-transparent"
+    >
+    </div>
+    <h1
+        class="font-display text-[clamp(56px,10vw,88px)] text-white tracking-[12px] leading-none relative drop-shadow-lg"
+    >
+        NOTICIAS
+    </h1>
+    <div class="flex items-center gap-2 mt-4 relative">
+        <a
+            href="/"
+            class="font-heading font-semibold text-[11px] text-white/60 tracking-[1.5px] uppercase transition-colors hover:text-brand-gold"
+        >
+            INICIO
+        </a>
+        <span class="text-brand-gold text-xs">›</span>
+        <span
+            class="font-heading font-black text-[11px] text-brand-gold tracking-[1.5px] uppercase"
+        >
+            NOTICIAS
+        </span>
+    </div>
+</section>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 115">
+  <path d="M50 2 L95 18 L95 55 C95 80 73 102 50 113 C27 102 5 80 5 55 L5 18 Z" fill="#911F21" stroke="#FFA400" stroke-width="2.5"/>
+  <path d="M50 2 L95 18 L95 30 L5 30 L5 18 Z" fill="#7A1A1C"/>
+  <rect x="5" y="47" width="90" height="5" fill="#FFA400" opacity="0.3"/>
+  <text x="50" y="70" text-anchor="middle" fill="#FFA400" font-size="24" font-family="Arial, sans-serif" font-weight="700">CYC</text>
+</svg>

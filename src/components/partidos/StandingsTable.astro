@@ -1,0 +1,39 @@
+---
+import { standings } from "../../data/partidos";
+---
+<div data-panel-content="table" class="match-panel hidden overflow-hidden rounded-[1.75rem] border border-black/8 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.06)] w-full">
+  <div class="overflow-x-auto w-full">
+    <table class="min-w-full border-collapse text-left whitespace-nowrap">
+      <thead class="bg-brand-ink text-white">
+        <tr>
+          <th class="px-3 sm:px-4 py-3 sm:py-4 font-heading text-[0.6rem] sm:text-[0.68rem] uppercase tracking-[0.18em]">Pos</th>
+          <th class="px-3 sm:px-4 py-3 sm:py-4 font-heading text-[0.6rem] sm:text-[0.68rem] uppercase tracking-[0.18em]">Club</th>
+          <th class="px-3 sm:px-4 py-3 sm:py-4 font-heading text-[0.6rem] sm:text-[0.68rem] uppercase tracking-[0.18em]">PJ</th>
+          <th class="px-3 sm:px-4 py-3 sm:py-4 font-heading text-[0.6rem] sm:text-[0.68rem] uppercase tracking-[0.18em]">DG</th>
+          <th class="px-3 sm:px-4 py-3 sm:py-4 font-heading text-[0.6rem] sm:text-[0.68rem] uppercase tracking-[0.18em]">PTS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          standings.map((row) => (
+            <tr class:list={[row.highlight ? "bg-brand-gold/10" : "border-t border-black/8"]}>
+              <td class="px-3 sm:px-4 py-3 sm:py-4 font-heading text-xs sm:text-sm font-black text-brand-ink">{row.pos}</td>
+              <td class="px-3 sm:px-4 py-3 sm:py-4">
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <img src={row.logo} alt={row.club} class="h-7 w-7 sm:h-9 sm:w-9 rounded-full border border-black/8 bg-white object-contain p-[0.15rem] sm:p-1" />
+                  <span class="font-heading text-xs sm:text-sm font-black uppercase tracking-[0.08em] text-brand-ink">{row.club}</span>
+                </div>
+              </td>
+              <td class="px-3 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm text-black/65">{row.pj}</td>
+              <td class="px-3 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm text-black/65">{row.dg > 0 ? `+${row.dg}` : row.dg}</td>
+              <td class="px-3 sm:px-4 py-3 sm:py-4 font-heading text-base sm:text-lg font-black text-brand-garnet">{row.pts}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="border-t border-black/8 bg-black/[0.02] px-4 py-4 text-xs sm:text-sm text-black/55 text-center sm:text-left">
+    Tabla del Torneo Apertura 2026 tras la fecha 9, antes del inicio de la fecha 10 del martes 14 de abril de 2026.
+  </div>
+</div>

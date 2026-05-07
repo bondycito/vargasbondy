@@ -1,0 +1,99 @@
+---
+import ClubCrest from "./ClubCrest.astro";
+import { navItems, sponsors } from "../data/site";
+
+const socialLinks = [
+  { label: "Instagram", href: "https://www.instagram.com/clubchankascyc/" },
+  { label: "Facebook", href: "https://www.facebook.com/ClubDeportivoLosChankasCYC" },
+  { label: "TikTok", href: "https://www.tiktok.com/@loschankascyc?fbclid=IwY2xjawRaJolleHRuA2FlbQIxMABicmlkETFiRnp2V0FIQ3JBQlhCUE85c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHjyP3vGQGU2rcvTsbV3ULZ5l255wGRbQKlOYhrypQCjhbLQVmn2aFXx7yPIH_aem_72AG4iWsDyA5hiSLcIgvIg" },
+];
+---
+
+<footer class="mt-12 overflow-hidden border-t border-brand-gold/10 bg-[#0b0b0d] text-white">
+  <div class="container-shell py-14 sm:py-16">
+    <div class="grid gap-10 lg:grid-cols-[1.2fr_0.9fr_0.9fr] xl:grid-cols-[1.35fr_0.8fr_0.8fr_1fr]">
+      <div>
+        <div class="flex items-center gap-4">
+          <div class="rounded-[1.4rem] border border-brand-gold/15 bg-white/[0.04] p-3">
+            <ClubCrest size={54} glow={true} />
+          </div>
+          <div>
+            <div class="font-display text-3xl tracking-[0.16em] text-brand-gold">CHANKAS CYC</div>
+            <div class="mt-1 font-heading text-[0.68rem] font-bold uppercase tracking-[0.28em] text-white/55"> · Andahuaylas</div>
+          </div>
+        </div>
+
+        <p class="mt-6 max-w-md text-sm leading-7 text-white/62">
+          Plataforma oficial del club para seguir la actualidad del equipo, conocer la identidad institucional y conectar con la comunidad chanka.
+        </p>
+
+        <div class="mt-6 inline-flex items-center gap-2 rounded-full border border-brand-gold/15 bg-brand-gold/8 px-4 py-2 font-heading text-[0.68rem] font-extrabold uppercase tracking-[0.22em] text-brand-gold">
+          <span class="h-2 w-2 rounded-full bg-brand-orange"></span>
+          La sangre guerrera de Andahuaylas
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-heading text-sm font-black uppercase tracking-[0.22em] text-brand-gold">Navegación</h3>
+        <div class="mt-5 flex flex-col gap-3">
+          {
+            navItems.map((item) => (
+              <a href={item.href} class="text-sm text-white/62 no-underline hover:translate-x-1 hover:text-brand-gold">
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-heading text-sm font-black uppercase tracking-[0.22em] text-brand-gold">Contacto</h3>
+        <div class="mt-5 space-y-3 text-sm text-white/62">
+          <p>Estadio Comunal de Andahuaylas</p>
+          <a href="tel:+51083421000" class="block no-underline hover:text-brand-gold">+51 083 421 000</a>
+          <a href="mailto:info@chankascyc.pe" class="block no-underline hover:text-brand-gold">info@chankascyc.pe</a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-heading text-sm font-black uppercase tracking-[0.22em] text-brand-gold">Comunidad</h3>
+        <div class="mt-5 flex flex-wrap gap-2">
+          {
+            socialLinks.map((item) => (
+              <a
+                href={item.href}
+                class="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold tracking-[0.08em] text-white/72 no-underline hover:border-brand-gold/30 hover:bg-brand-gold/10 hover:text-brand-gold"
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+
+        <div class="mt-6">
+          <p class="mb-3 font-heading text-[0.68rem] font-black uppercase tracking-[0.24em] text-white/48">Patrocinadores</p>
+          <div class="grid grid-cols-2 gap-2">
+            {
+              sponsors.slice(0, 4).map((name) => (
+                <div class="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-4 text-center font-heading text-[0.6rem] font-extrabold uppercase tracking-[0.14em] text-white/58">
+                  {name}
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/8 bg-black/20">
+    <div class="container-shell flex flex-col gap-3 py-5 text-xs text-white/35 md:flex-row md:items-center md:justify-between">
+      <p>© 2026 Chankas CYC · Todos los derechos reservados</p>
+      <div class="flex gap-5">
+        <span>Privacidad</span>
+        <span>Términos</span>
+        <span>Cookies</span>
+      </div>
+    </div>
+  </div>
+</footer>

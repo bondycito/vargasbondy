@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { products } from "../data/site";
+
+const categories = ["Todos", "Camisetas", "Accesorios", "Equipamiento", "Edición especial"] as const;
+---
+
+<BaseLayout title="Chankas CYC | Tienda">
+  <PageHero title="TIENDA" subtitle="Catálogo estático simplificado para mostrar productos y categorías sin la capa completa de una tienda dinámica." />
+
+  <section class="surface-light py-16">
+    <div class="container-shell">
+      <div class="mb-10 flex flex-wrap gap-3">
+        {
+          categories.map((category, index) => (
+            <button
+              type="button"
+              class:list={[
+                "store-filter rounded-full border-2 px-5 py-2 font-heading text-[0.68rem] font-black uppercase tracking-[0.24em] transition",
+                index === 0 ? "border-brand-garnet bg-brand-garnet text-white" : "border-black/10 text-black/55 hover:border-brand-gold hover:text-brand-gold",
+              ]}
+              data-category={category}
+            >
+              {category}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {
+          products.map((product) => (
+            <article class="store-card overflow-hidden border border-black/8 bg-white shadow-[0_10px_24px_rgba(0,0,0,.05)]" data-category={product.category}>
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <img src={product.image} alt={product.name} class="h-full w-full object-cover transition duration-500 hover:scale-105" />
+                {product.badge && <span class="absolute right-4 top-4 rounded-full bg-brand-gold px-3 py-1 font-heading text-[0.6rem] font-black uppercase tracking-[0.22em] text-brand-ink">{product.badge}</span>}
+              </div>
+              <div class="p-6">
+                <p class="font-heading text-[0.62rem] font-black uppercase tracking-[0.22em] text-black/40">{product.category}</p>
+                <h2 class="mt-3 font-heading text-lg font-black uppercase tracking-[0.05em] text-brand-ink">{product.name}</h2>
+                <p class="mt-2 text-sm leading-7 text-black/60">{product.subtitle}</p>
+                <div class="mt-5 flex items-center justify-between">
+                  <span class="font-heading text-xl font-black text-brand-garnet">{product.price}</span>
+                  <span class:list={[product.available ? "text-emerald-700" : "text-black/35", "font-heading text-[0.62rem] font-black uppercase tracking-[0.22em]"]}>
+                    {product.available ? "Disponible" : "Agotado"}
+                  </span>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const buttons = document.querySelectorAll(".store-filter");
+    const cards = document.querySelectorAll(".store-card");
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const category = button.dataset.category;
+        buttons.forEach((node) => {
+          node.classList.remove("border-brand-garnet", "bg-brand-garnet", "text-white");
+          node.classList.add("border-black/10", "text-black/55");
+        });
+        button.classList.add("border-brand-garnet", "bg-brand-garnet", "text-white");
+        button.classList.remove("border-black/10", "text-black/55");
+        cards.forEach((card) => {
+          card.classList.toggle("hidden", category !== "Todos" && card.dataset.category !== category);
+        });
+      });
+    });
+  </script>
+</BaseLayout>

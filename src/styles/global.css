@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700;800;900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-brand-garnet: #911f21;
+  --color-brand-garnet-dark: #6f1618;
+  --color-brand-gold: #ffa400;
+  --color-brand-orange: #ff4500;
+  --color-brand-ink: #0d0d0d;
+  --color-brand-ash: #f6f4f1;
+  --font-display: "Bebas Neue", sans-serif;
+  --font-heading: "Montserrat", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply m-0 bg-brand-ink font-body text-white antialiased;
+  background-image:
+    radial-gradient(circle at top, rgba(255, 164, 0, 0.08), transparent 28%),
+    linear-gradient(180deg, #0d0d0d 0%, #120809 100%);
+}
+
+a {
+  @apply transition-colors duration-200;
+}
+
+.container-shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.eyebrow {
+  @apply inline-flex items-center gap-3 font-heading text-[0.65rem] font-extrabold uppercase tracking-[0.4em] text-brand-gold;
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: "";
+  @apply h-px w-10 bg-brand-gold/40;
+}
+
+.section-title {
+  @apply font-heading text-3xl font-black uppercase tracking-[0.16em] text-white sm:text-4xl;
+}
+
+.panel {
+  @apply rounded-none border border-white/8 bg-white/[0.04] backdrop-blur-sm;
+}
+
+.surface-light {
+  @apply bg-brand-ash text-brand-ink;
+}
+
+.texture-grid {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 28px,
+    rgba(255, 255, 255, 0.03) 28px,
+    rgba(255, 255, 255, 0.03) 29px
+  );
+}
+
+.gold-rule {
+  background: linear-gradient(to right, transparent, rgba(255, 164, 0, 0.9), transparent);
+}
+
+.button-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-brand-gold bg-brand-gold px-6 py-3.5 font-heading text-sm font-extrabold uppercase tracking-[0.16em] text-brand-ink shadow-[0_12px_28px_rgba(255,164,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#ffb733] hover:shadow-[0_16px_34px_rgba(255,164,0,0.32)];
+}
+
+.button-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-white/60 px-6 py-3.5 font-heading text-sm font-bold uppercase tracking-[0.14em] text-white transition hover:-translate-y-0.5 hover:border-white hover:bg-white/10;
+}
+
+.button-ghost-dark {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-brand-garnet px-6 py-3.5 font-heading text-sm font-extrabold uppercase tracking-[0.14em] text-brand-garnet transition hover:-translate-y-0.5 hover:bg-brand-garnet hover:text-white;
+}
+
+.page-hero {
+  @apply relative overflow-hidden border-b border-brand-gold/20 bg-brand-garnet;
+}
+
+.page-hero::before {
+  content: "";
+  @apply absolute inset-0 opacity-80;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 28px,
+    rgba(255, 255, 255, 0.03) 28px,
+    rgba(255, 255, 255, 0.03) 29px
+  );
+}
+
+.page-hero::after {
+  content: "";
+  background: radial-gradient(circle at top right, rgba(255, 164, 0, 0.12), transparent 28%);
+  @apply absolute inset-0;
+}

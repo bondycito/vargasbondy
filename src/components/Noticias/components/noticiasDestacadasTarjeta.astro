@@ -1,0 +1,133 @@
+---
+// src/components/noticias/NewsCard.astro
+import { mapaImagenes } from "../data/imagenes";
+import type { Noticia } from "../data/noticias";
+
+interface Props {
+    noticia: Noticia;
+    variant?: "large" | "small" | "grid";
+}
+
+const { noticia, variant = "grid" } = Astro.props as Props;
+
+// Configurar clases según variante
+const variantClasses = {
+    large: {
+        container:
+            "relative flex-[0_0_58%] min-h-[460px] overflow-hidden cursor-pointer group",
+        overlay:
+            "absolute inset-0 bg-gradient-to-t from-brand-ink/95 via-brand-ink/30 to-transparent",
+        content: "absolute bottom-0 left-0 right-0 p-8",
+        category:
+            "inline-block bg-brand-gold text-brand-ink font-heading font-black text-[10px] tracking-[2.5px] px-3 py-1.5 mb-3.5",
+        title: "font-heading font-black text-[clamp(18px,2.2vw,26px)] text-white leading-tight mb-3 uppercase tracking-[0.5px]",
+        dateIcon: "w-3 h-3 text-white/60",
+        dateText: "font-body text-xs text-white/60",
+        // readMore ya no se usa, podemos eliminarlo del objeto
+    },
+    small: {
+        container:
+            "relative flex-1 min-h-[220px] overflow-hidden cursor-pointer group",
+        overlay:
+            "absolute inset-0 bg-gradient-to-t from-brand-ink/92 via-brand-ink/20 to-transparent",
+        content: "absolute bottom-0 left-0 right-0 p-5",
+        category:
+            "inline-block bg-brand-gold text-brand-ink font-heading font-black text-[9px] tracking-[2px] px-2.5 py-1 mb-2.5",
+        title: "font-heading font-bold text-sm text-white leading-tight uppercase tracking-[0.3px] line-clamp-3",
+        dateIcon: "w-2.5 h-2.5 text-white/50",
+        dateText: "font-body text-[11px] text-white/50",
+    },
+    grid: {
+        container:
+            "bg-white border border-[#EEEEEE] overflow-hidden cursor-pointer transition-all duration-300 group hover:shadow-[0_12px_40px_rgba(145,31,33,0.2),0_4px_12px_rgba(145,31,33,0.1)] hover:-translate-y-1",
+        overlay:
+            "absolute inset-0 bg-brand-garnet/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+        content: "p-6",
+        category:
+            "absolute top-[14px] left-[14px] bg-brand-gold text-brand-ink font-heading font-black text-[10px] tracking-[2px] px-2.5 py-1.5",
+        title: "font-heading font-bold text-base text-brand-ink leading-tight mb-3 uppercase tracking-[0.5px] transition-colors duration-200 group-hover:text-brand-garnet",
+        dateIcon: "w-3 h-3 text-brand-garnet",
+        dateText: "font-body text-xs text-[#999999] tracking-[0.5px]",
+    },
+};
+
+type VariantType = keyof typeof variantClasses;
+const classes = variantClasses[variant as VariantType];
+const imagenSrc =
+    mapaImagenes[noticia.imagen as keyof typeof mapaImagenes]?.src ||
+    mapaImagenes.default.src;
+---
+
+<article class={classes.container}>
+    {
+        variant !== "grid" ? (
+            <>
+                <img
+                    src={imagenSrc}
+                    alt={noticia.titulo}
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div class={classes.overlay} />
+                <div class={classes.content}>
+                    <span class={classes.category}>{noticia.categoria}</span>
+                    <h2 class={classes.title}>{noticia.titulo}</h2>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5">
+                            <svg
+                                class={classes.dateIcon}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                            </svg>
+                            <span class={classes.dateText}>
+                                {noticia.fecha}
+                            </span>
+                        </div>
+                        {/* ELIMINADO: Bloque de "LEER MÁS" ya no está aquí */}
+                    </div>
+                </div>
+            </>
+        ) : (
+            <>
+                <div class="relative pb-[56.25%] overflow-hidden">
+                    <img
+                        src={imagenSrc}
+                        alt={noticia.titulo}
+                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-107"
+                    />
+                    <div class={classes.overlay} />
+                    <span class={classes.category}>{noticia.categoria}</span>
+                </div>
+                <div class={classes.content}>
+                    <div class="flex items-center gap-1.5 mb-3">
+                        <svg
+                            class={classes.dateIcon}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                        </svg>
+                        <span class={classes.dateText}>{noticia.fecha}</span>
+                    </div>
+                    <h3 class={classes.title}>{noticia.titulo}</h3>
+                    <p class="font-body text-sm text-[#666666] leading-relaxed mb-5 line-clamp-2">
+                        {noticia.contenido}
+                    </p>
+                </div>
+            </>
+        )
+    }
+</article>

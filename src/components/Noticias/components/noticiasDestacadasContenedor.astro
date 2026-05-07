@@ -1,0 +1,30 @@
+---
+// src/components/noticias/FeaturedNews.astro
+import type { Noticia } from "../data/noticias";
+import NewsCard from "./noticiasDestacadasTarjeta.astro";
+
+interface Props {
+    principal: Noticia;
+    secundarias: Noticia[];
+}
+
+const { principal, secundarias } = Astro.props as Props;
+---
+
+<section class="bg-brand-ink py-12">
+    <div class="container-shell">
+        <div class="eyebrow mb-7">DESTACADO</div>
+        <div class="flex gap-1 min-h-[460px] flex-wrap">
+            <NewsCard noticia={principal} variant="large" />
+            <div class="flex-[0_0_40%] flex flex-col gap-1 min-w-[260px]">
+                {
+                    secundarias
+                        .slice(0, 2)
+                        .map((noticia: Noticia) => (
+                            <NewsCard noticia={noticia} variant="small" />
+                        ))
+                }
+            </div>
+        </div>
+    </div>
+</section>

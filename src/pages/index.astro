@@ -1,0 +1,465 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ClubCrest from "../components/ClubCrest.astro";
+import { homeStats, newsItems, sponsors } from "../data/site";
+import { upcomingMatches } from "../data/partidos";
+import Animationplayer from "src/components/Animationplayer.astro";
+
+const featuredNews = newsItems.slice(0, 3);
+const nextMatch = upcomingMatches[0];
+---
+
+<BaseLayout title="Chankas CYC | Inicio">
+  <section class="relative overflow-hidden">
+    <img
+      src="../public/estadio/2.webp"
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+    <div class="absolute inset-0 bg-brand-garnet/70"></div>
+    <div
+      class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-ink to-transparent"
+    >
+    </div>
+    <div class="absolute inset-0 texture-grid"></div>
+    <div
+      class="container-shell relative flex min-h-[calc(100vh-72px)] flex-col items-center justify-center py-20 text-center"
+    >
+      
+      <img src="/public/Logo.png" alt="Chankas CYC" style="max-width: 160px;">
+      <h1
+        class="mt-8 font-display text-7xl leading-none tracking-[0.16em] text-white sm:text-8xl md:text-[9rem]"
+      >
+        CHANKAS CYC
+      </h1>
+      <div
+        class="mt-5 h-1 w-24 bg-brand-gold shadow-[0_0_18px_rgba(255,164,0,.65)]"
+      >
+      </div>
+      <p
+        class="mt-5 font-heading text-sm font-bold uppercase tracking-[0.45em] text-brand-gold sm:text-base"
+      >
+        La sangre guerrera de Andahuaylas
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <a href="/partidos" class="button-primary">Ver partidos</a>
+        <a href="/noticias" class="button-secondary">últimas noticias</a>
+      </div>
+    </div>
+  </section>
+  <!-- SECCION DE PROXIMO PARTIDO -->
+  <section class="border-y border-brand-gold/20 bg-[#220708] py-12 sm:py-14">
+    <div class="container-shell">
+      <div
+        class="overflow-hidden rounded-[2rem] border border-brand-gold/20 bg-[linear-gradient(135deg,#2a0708_0%,#3a0a0c_60%,#240607_100%)] px-6 py-8 shadow-[0_24px_60px_rgba(0,0,0,0.32)] sm:px-8 lg:px-10"
+      >
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span
+              class="inline-flex rounded-xl border border-brand-gold/30 bg-brand-gold/8 px-5 py-2 font-heading text-[0.68rem] font-extrabold uppercase tracking-[0.34em] text-brand-gold"
+            >
+              Próximo partido
+            </span>
+            <p
+              class="mt-3 font-heading text-xs font-bold uppercase tracking-[0.24em] text-white/45"
+            >
+              {nextMatch.shortCompetition} - {nextMatch.competition}
+            </p>
+          </div>
+          <a
+            href="/partidos"
+            class="font-heading text-xs font-black uppercase tracking-[0.24em] text-brand-gold no-underline"
+          >
+            Ver fixture completo
+          </a>
+        </div>
+
+        <div class="grid gap-8 xl:grid-cols-[1.1fr_0.75fr] xl:items-center">
+          <div
+            class="rounded-[1.75rem] border border-white/10 bg-black/12 p-5 sm:p-6"
+          >
+            <div class="grid gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+              <div class="min-w-0 text-center sm:text-left">
+                <p
+                  class="font-heading text-[0.62rem] font-black uppercase tracking-[0.16em] text-white/35"
+                >
+                  Local
+                </p>
+                <div
+                  class="mt-3 flex flex-col items-center gap-4 sm:items-start"
+                >
+                  <img
+                    src={nextMatch.homeLogo ?? "../public/teams/los-chankas.png"}
+                    alt={nextMatch.home}
+                    class="h-16 w-16 rounded-full border border-white/12 bg-white object-contain p-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.22)]"
+                  />
+                  <div>
+                    <h2
+                      class="font-heading text-2xl font-black uppercase tracking-[0.08em] text-white sm:text-[1.7rem]"
+                    >
+                      {nextMatch.home}
+                    </h2>
+                    <p
+                      class="mt-2 font-heading text-[0.62rem] uppercase tracking-[0.28em] text-white/45"
+                    >
+                      Estadio y afición a favor
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col items-center gap-3 text-center">
+                <div
+                  class="font-display text-6xl leading-none tracking-[0.16em] text-brand-gold sm:text-7xl"
+                >
+                  VS
+                </div>
+                <div class="h-px w-16 bg-brand-gold/40"></div>
+              </div>
+
+              <div class="min-w-0 text-center sm:text-right">
+                <p
+                  class="font-heading text-[0.62rem] font-black uppercase tracking-[0.16em] text-white/35"
+                >
+                  Visita
+                </p>
+                <div class="mt-3 flex flex-col items-center gap-4 sm:items-end">
+                  <img
+                    src={nextMatch.awayLogo ?? "../public/teams/los-chankas.png"}
+                    alt={nextMatch.away}
+                    class="h-16 w-16 rounded-full border border-white/12 bg-white object-contain p-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.22)]"
+                  />
+                  <div>
+                    <h2
+                      class="font-heading text-2xl font-black uppercase tracking-[0.08em] text-white sm:text-[1.7rem]"
+                    >
+                      {nextMatch.away}
+                    </h2>
+                    <p
+                      class="mt-2 font-heading text-[0.62rem] uppercase tracking-[0.28em] text-white/45"
+                    >
+                      Rival de la fecha
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="mt-6 grid gap-3 rounded-2xl bg-white/[0.06] p-4 text-sm text-white/72 sm:grid-cols-2"
+            >
+              <p>{nextMatch.dateLabel} -{nextMatch.time}</p>
+              <p class="sm:text-right">{nextMatch.stadium}, {nextMatch.city}</p>
+            </div>
+          </div>
+
+          <div
+            class="rounded-[1.75rem] border border-brand-gold/14 bg-black/15 p-5 sm:p-6"
+          >
+            <div class="flex items-center justify-between gap-3">
+              <p
+                class="font-heading text-[0.62rem] font-black uppercase tracking-[0.32em] text-white/50"
+              >
+                Cuenta atrás
+              </p>
+              <a
+                href="/partidos"
+                class="button-primary px-5 py-3 text-[0.72rem]">Ver partidos</a
+              >
+            </div>
+            <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div
+                class="rounded-2xl border border-brand-gold/12 bg-black/10 px-3 py-4 text-center"
+              >
+                <div
+                  id="countdown-days"
+                  class="font-display text-5xl leading-none text-brand-gold sm:text-6xl"
+                >
+                  00
+                </div><div
+                  class="mt-2 font-heading text-[0.58rem] uppercase tracking-[0.26em] text-white/50"
+                >
+                  Días
+                </div>
+              </div>
+              <div
+                class="rounded-2xl border border-brand-gold/12 bg-black/10 px-3 py-4 text-center"
+              >
+                <div
+                  id="countdown-hours"
+                  class="font-display text-5xl leading-none text-brand-gold sm:text-6xl"
+                >
+                  00
+                </div><div
+                  class="mt-2 font-heading text-[0.58rem] uppercase tracking-[0.26em] text-white/50"
+                >
+                  Hrs
+                </div>
+              </div>
+              <div
+                class="rounded-2xl border border-brand-gold/12 bg-black/10 px-3 py-4 text-center"
+              >
+                <div
+                  id="countdown-minutes"
+                  class="font-display text-5xl leading-none text-brand-gold sm:text-6xl"
+                >
+                  00
+                </div><div
+                  class="mt-2 font-heading text-[0.58rem] uppercase tracking-[0.26em] text-white/50"
+                >
+                  Min
+                </div>
+              </div>
+              <div
+                class="rounded-2xl border border-brand-gold/12 bg-black/10 px-3 py-4 text-center"
+              >
+                <div
+                  id="countdown-seconds"
+                  class="font-display text-5xl leading-none text-brand-gold sm:text-6xl"
+                >
+                  00
+                </div><div
+                  class="mt-2 font-heading text-[0.58rem] uppercase tracking-[0.26em] text-white/50"
+                >
+                  Seg
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- SECCION REELS ULTIMAS REDES SOCIALES   -->
+<section class="surface-light py-20">
+  <div class="container-shell">
+
+    <!-- HEADER (IGUAL QUE NOTICIAS) -->
+    <div class="mb-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-2xl">
+        <span class="eyebrow">Cobertura oficial</span>
+        <h2 class="mt-5 font-heading text-3xl font-black uppercase tracking-[0.14em] text-brand-ink sm:text-4xl">
+          últimas redes sociales
+        </h2>
+        <p class="mt-4 text-sm leading-7 text-black/62 sm:text-base">
+          Contenido directo desde nuestras redes sociales más recientes.
+        </p>
+      </div>
+
+      <a
+        href="https://www.instagram.com/clubchankascyc"
+        class="font-heading text-xs font-black uppercase tracking-[0.24em] text-brand-garnet no-underline"
+      >
+        Ver todas
+      </a>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+      <!-- CARD 1 -->
+      <article class="flex items-center justify-center overflow-hidden rounded-[1.75rem] border border-black/8 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.06)] p-4 transition hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(145,31,33,0.12)]">
+        
+        <blockquote 
+          class="instagram-media"
+          data-instgrm-permalink="https://www.instagram.com/p/DXuz7c9lS9a/"
+          data-instgrm-version="14"
+          style="width:100%; max-width:540px;">
+        </blockquote>
+
+      </article>
+
+      <!-- CARD 2 -->
+      <article class="flex items-center justify-center overflow-hidden rounded-[1.75rem] border border-black/8 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.06)] p-4 transition hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(145,31,33,0.12)]">
+        
+        <blockquote 
+          class="instagram-media"
+          data-instgrm-permalink="https://www.instagram.com/p/DXsDktTjif6/"
+          data-instgrm-version="14"
+          style="width:100%; max-width:540px;">
+        </blockquote>
+
+      </article>
+
+      <!-- CARD 3 (REEL) -->
+      <article class="flex items-center justify-center overflow-hidden rounded-[1.75rem] border border-black/8 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.06)] p-4 transition hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(145,31,33,0.12)]">
+        
+        <blockquote 
+          class="instagram-media"
+          data-instgrm-permalink="https://www.instagram.com/p/DXps3qDFWJo/"
+          data-instgrm-version="14"
+          style="width:100%; max-width:540px;">
+        </blockquote>
+
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- SCRIPT (SOLO UNA VEZ EN TODA LA PAGINA) -->
+<script async src="https://www.instagram.com/embed.js"></script>
+
+<!-- AJUSTE RESPONSIVE -->
+<style>
+  .instagram-media {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+  }
+</style>
+  <!-- SECCION JUGADORES TOP    -->
+  
+  <Animationplayer title="PLANTILLA"
+    subtitle="Plantel principal y cuerpo técnico del club, presentados con una lectura más clara, jerarquía visual fuerte y filtros más útiles."
+  />
+
+
+
+  <!-- SECCION NOTICIAS  -->
+  <section class="surface-light py-20">
+    <div class="container-shell">
+      <div
+        class="mb-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
+      >
+        <div class="max-w-2xl">
+          <span class="eyebrow">Cobertura oficial</span>
+          <h2
+            class="mt-5 font-heading text-3xl font-black uppercase tracking-[0.14em] text-brand-ink sm:text-4xl"
+          >
+            últimas noticias
+          </h2>
+          <p class="mt-4 text-sm leading-7 text-black/62 sm:text-base">
+            Resumen editorial con las publicaciones más recientes del club,
+            usando el mismo lenguaje visual de la sección de noticias.
+          </p>
+        </div>
+
+        <a
+          href="/noticias"
+          class="font-heading text-xs font-black uppercase tracking-[0.24em] text-brand-garnet no-underline"
+        >
+          Ver todas
+        </a>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {
+          featuredNews.map((item) => (
+            <article class="group overflow-hidden rounded-[1.75rem] border border-black/8 bg-white shadow-[0_14px_34px_rgba(15,23,42,0.06)] transition hover:-translate-y-1 hover:shadow-[0_22px_44px_rgba(145,31,33,0.12)]">
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                <span class="absolute left-4 top-4 rounded-full bg-brand-gold px-3 py-1 font-heading text-[0.64rem] font-black uppercase tracking-[0.16em] text-brand-ink">
+                  {item.category}
+                </span>
+              </div>
+
+              <div class="p-6">
+                <p class="font-heading text-[0.68rem] font-bold uppercase tracking-[0.18em] text-black/40">
+                  {item.date}
+                </p>
+                <h3 class="mt-3 font-heading text-xl font-black uppercase leading-7 tracking-[0.05em] text-brand-ink">
+                  {item.title}
+                </h3>
+                <p class="mt-3 text-sm leading-7 text-black/62">
+                  {item.excerpt}
+                </p>
+                <a
+                  href="/noticias"
+                  class="mt-5 inline-flex items-center gap-2 font-heading text-sm font-bold uppercase tracking-[0.08em] text-brand-garnet no-underline"
+                >
+                  Leer más
+                  <span class="text-brand-orange transition group-hover:translate-x-1">
+                    &rarr;
+                  </span>
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden bg-brand-garnet py-20">
+    <div class="absolute inset-0 texture-grid"></div>
+    <div class="gold-rule absolute inset-x-0 top-0 h-[3px]"></div>
+    <div class="gold-rule absolute inset-x-0 bottom-0 h-[3px]"></div>
+    <div class="container-shell relative">
+      <div class="mb-12 text-center">
+        <span class="eyebrow">Nuestros números</span>
+        <h2 class="mt-5 section-title">El orgullo de Andahuaylas</h2>
+      </div>
+      <div class="grid gap-px bg-brand-gold/10 md:grid-cols-4">
+        {
+          homeStats.map((stat) => (
+            <div class="bg-black/15 px-6 py-10 text-center">
+              <div class="font-display text-7xl leading-none tracking-[0.06em] text-brand-gold">
+                {stat.value}
+              </div>
+              <div class="mt-3 font-heading text-lg font-black uppercase tracking-[0.24em] text-white">
+                {stat.label}
+              </div>
+              <div class="mt-2 font-body text-xs uppercase tracking-[0.28em] text-white/45">
+                {stat.sublabel}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="surface-light py-16">
+    <div class="container-shell">
+      <div class="mb-10 text-center">
+        <span
+          class="font-heading text-[0.62rem] font-black uppercase tracking-[0.42em] text-black/40"
+          >Patrocinadores</span
+        >
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+        {
+          sponsors.map((name) => (
+            <div class="flex min-h-20 items-center justify-center border border-black/8 bg-white px-4 text-center font-heading text-[0.7rem] font-black uppercase tracking-[0.16em] text-black/55">
+              {name}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ countdownDate: nextMatch.isoDate }}>
+    const targetDate = new Date(countdownDate);
+    const slots = {
+      days: document.getElementById("countdown-days"),
+      hours: document.getElementById("countdown-hours"),
+      minutes: document.getElementById("countdown-minutes"),
+      seconds: document.getElementById("countdown-seconds"),
+    };
+
+    const updateCountdown = () => {
+      const diff = targetDate.getTime() - Date.now();
+      const safe = Math.max(diff, 0);
+      const days = Math.floor(safe / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((safe / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((safe / (1000 * 60)) % 60);
+      const seconds = Math.floor((safe / 1000) % 60);
+      if (slots.days) slots.days.textContent = String(days).padStart(2, "0");
+      if (slots.hours) slots.hours.textContent = String(hours).padStart(2, "0");
+      if (slots.minutes)
+        slots.minutes.textContent = String(minutes).padStart(2, "0");
+      if (slots.seconds)
+        slots.seconds.textContent = String(seconds).padStart(2, "0");
+    };
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</BaseLayout>

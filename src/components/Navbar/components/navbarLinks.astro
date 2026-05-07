@@ -1,0 +1,30 @@
+---
+// src/components/Header/NavLinks.astro
+import type { NavLink } from "../data/navbarLinks";
+
+interface Props {
+    links: NavLink[];
+    isActive: (to: string) => boolean;
+    variant?: "desktop" | "mobile";
+}
+
+const { links, isActive, variant = "desktop" } = Astro.props;
+const isDesktop = variant === "desktop";
+---
+
+{
+    links.map((link) => {
+        const active = isActive(link.to);
+        return (
+            <a
+                href={link.to}
+                class:list={[
+                    isDesktop ? "desktop-nav-link" : "mobile-nav-link",
+                    active && "active",
+                ]}
+            >
+                {link.label}
+            </a>
+        );
+    })
+}

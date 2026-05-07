@@ -1,0 +1,116 @@
+/* src/components/Header/Header.css */
+
+/* ===== FUENTES ===== */
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&display=swap");
+
+/* ===== ESTILOS BASE DEL NAVBAR ===== */
+#navbar {
+    background-color: #911f21;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+#navbar.scrolled {
+    background-color: #7a1a1c;
+    border-bottom: 2px solid #ffa400;
+}
+
+/* ===== DESKTOP NAV LINKS ===== */
+.desktop-nav-link {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    transition: color 0.2s;
+    text-decoration: none;
+    position: relative;
+    color: #ffffff;
+    border-bottom: 2px solid transparent;
+}
+
+.desktop-nav-link.active {
+    color: #ffa400;
+    border-bottom: 2px solid #ffa400;
+}
+
+.desktop-nav-link:hover {
+    color: #ffa400;
+}
+
+/* ===== CTA BUTTON ===== */
+.cta-button {
+    background-color: #ffa400;
+    color: #0d0d0d;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    background-color: #ffb733;
+    transform: translateY(-1px);
+}
+
+/* ===== MOBILE NAV LINKS ===== */
+.mobile-nav-link {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.mobile-nav-link.active {
+    color: #ffa400;
+}
+
+.mobile-cta-button {
+    background-color: #ffa400;
+    color: #0d0d0d;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 8px;
+    display: block;
+}
+
+.mobile-cta-button:hover {
+    background-color: #ffb733;
+}
+
+/* ===== LOGO ===== */
+.logo-text {
+    font-family: "Bebas Neue", sans-serif;
+    line-height: 1;
+}
+
+.logo-text-main {
+    color: #ffa400;
+    font-size: 20px;
+    letter-spacing: 3px;
+}
+
+.logo-text-sub {
+    color: #ffffff;
+    font-size: 13px;
+    letter-spacing: 5px;
+}

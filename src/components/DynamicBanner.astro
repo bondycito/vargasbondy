@@ -1,0 +1,162 @@
+---
+import "../styles/plantilla.css";
+// TacticalField.astro
+// 1. Definimos los 11 jugadores únicos agregando la propiedad 'img' y 'imgSec' para el panel secundario
+const playersData = [
+  { id: 1, num: 1,  name: "CAMACHO", rat: 1, stats: "REF 86 | DIV 84 | HAN 82", pos: "p1",  desc: "El cerrojo bajo los tres palos. Experiencia pura en el arco.", img: "../../jugadores/Hairo_Camacho.jpg", imgSec: "../../jugadores_modal/JOSE_CAMACHO.jpg" },
+  { id: 2, num: 18, name: "TAKEUCHI", rat: 18, stats: "DEF 83 | PHY 85 | PAC 78", pos: "p2",  desc: "Un muro defensivo impasable, fuerte en el juego aéreo.", img: "../../jugadores/Oshiro_Takeuchi.jpg", imgSec: "../../jugadores_modal/OSHIRO_TAKEUCHI.jpg" },
+  { id: 3, num: 33, name: "PIMIENTA", rat: 33, stats: "DEF 85 | PHY 88 | PAS 75", pos: "p3",  desc: "Liderazgo y agresividad en la zaga central.", img: "../../jugadores/Carlos_Pimienta.jpg", imgSec: "../../jugadores_modal/CARLOS_PIMIENTA.png" },
+  { id: 4, num: 24, name: "RIZZO",    rat: 24, stats: "DEF 81 | PAC 83 | PHY 79", pos: "p4",  desc: "Velocidad para las coberturas y salida limpia.", img: "../../jugadores/Gonzalo_Rizzo.webp", imgSec: "../../jugadores_modal/GONZALO_RIZZO.jpg" },
+  { id: 5, num: 26, name: "GONZÁLES", rat: 26, stats: "PAC 85 | PAS 77 | DEF 76", pos: "p5",  desc: "Proyección constante por la banda derecha.", img: "../../jugadores/David_Gonzales.png", imgSec: "../../jugadores_modal/DAVID_GONZALES.jpg" },
+  { id: 6, num: 31, name: "QUINTANA", rat: 31, stats: "PAS 83 | DRI 82 | SHO 78", pos: "p6",  desc: "Visión de juego y precisión en cada servicio.", img: "../../jugadores/Ayrthon_Quintana.jpg", imgSec: "../../jugadores_modal/AYRTON_QUINTANA.jpg" },
+  { id: 7, num: 8,  name: "QUIROZ",   rat: 8, stats: "DEF 84 | PHY 82 | PAS 80", pos: "p7",  desc: "El equilibrio en el mediocampo defensivo.", img: "../../jugadores/Adrian_Quiroz.webp", imgSec: "../../jugadores_modal/ADRIAN_QUIROZ.webp" },
+  { id: 8, num: 5,  name: "PALOMINO", rat: 5, stats: "DRI 90 | PAS 89 | SHO 85", pos: "p8",  desc: "La magia del equipo. Gambeta y creatividad total.", img: "../../jugadores/Jorge_palomino.jpg", imgSec: "../../jugadores_modal/JORGE_PALOMINO.jpg" },
+  { id: 9, num: 15, name: "SÁNCHEZ",  rat: 15, stats: "PAC 88 | DRI 84 | SHO 80", pos: "p9",  desc: "Explosividad pura por el extremo izquierdo.", img: "../../jugadores/Kelvin_Sanchez.jpg", imgSec: "../../jugadores_modal/KELVIN_SANCHEZ.jpg" },
+  { id: 10, num: 11, name: "QUINTERO", rat: 11, stats: "SHO 87 | PAS 85 | DRI 84", pos: "p10", desc: "El artillero del equipo. Olfato goleador letal.", img: "../../jugadores/Jarlin_Quintero.png", imgSec: "../../jugadores_modal/JARLIN_QUINTERO.jpg" },
+  { id: 11, num: 10, name: "TORRES",   rat: 10, stats: "PAC 86 | DRI 88 | PAS 82", pos: "p11", desc: "Habilidad técnica superior para romper líneas.", img: "../../jugadores/Franco_Torres.jpg", imgSec: "../../jugadores_modal/FRANCO_TORRES.jpg" },
+];
+---
+
+
+<section class="field-section">
+  <div class="info-panel-left">
+    <span class="eyebrow" >ALINEACION OFICIAL</span>
+    <h2>ALINEACIÓN GUERRERA</h2>
+    <p class="subtitle">Estrategia Táctica Temporada 2026</p>
+    <div class="divider"></div>
+    <p class="description">
+      Presentamos la disposición oficial de los 11 elegidos. Una formación diseñada para el dominio del balón y la presión alta. Haz clic sobre cualquier dorsal en el campo para conocer el historial y las estadísticas de cada guerrero.
+    </p>
+    <ul class="tactical-notes">
+      <li>Dominio Central</li>
+      <li>Defensa Férrea</li>
+      <li>Ataque Explosivo</li>
+    </ul>
+  </div>
+
+  <div class="scene">
+    <div class="stadium-container" id="stadium">
+      <div class="field-lines">
+        <div class="midline"></div>
+        <div class="center-circle"></div>
+      </div>
+      
+      {playersData.map((p) => (
+        <div 
+          class={`player-item ${p.pos}`} 
+          data-name={p.name}
+          data-rating={p.rat}
+          data-stats={p.stats}
+          data-desc={p.desc}
+          data-img={p.img}
+          data-imgsec={p.imgSec}
+          style={`--player-img: url('${p.img}')`}
+        >
+          <div class="shirt-shape"><span>{p.num}</span></div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <button class="close-modal" id="closeBtn">&times;</button>
+      
+      <div class="flying-panel desc-left">
+        <h3 id="modal-title">HISTORIAL GUERRERO</h3>
+        <p id="modal-desc">Descripción dinámica...</p>
+        <p style="color: var(--fc-gold);">★ Ícono del Club</p>
+      </div>
+
+      <div class="card-wrapper">
+        <div class="fc-card">
+          <div class="img-container" id="modal-img-container"></div>
+          <p class="rating" id="modal-rating"></p>
+          <p class="name" id="modal-name">PLAYER</p>
+        </div>
+      </div>
+
+      <div class="flying-panel img-right" id="rotatingImage"></div>
+    </div>
+  </div>
+</section>
+
+
+
+<script>
+  const initializeField = () => {
+    const players = document.querySelectorAll('.player-item');
+    const modal = document.getElementById('modalOverlay') as HTMLElement | null;
+    const stadium = document.getElementById('stadium') as HTMLElement | null;
+    const closeBtn = document.getElementById('closeBtn') as HTMLElement | null;
+    
+    const mName = document.getElementById('modal-name');
+    const mRating = document.getElementById('modal-rating');
+    const mStats = document.getElementById('modal-stats');
+    const mDesc = document.getElementById('modal-desc');
+    const mImgContainer = document.getElementById('modal-img-container'); // Contenedor de la imagen del modal
+    const mRotatingImage = document.getElementById('rotatingImage'); // Contenedor de la imagen secundaria derecha
+
+    if (!modal || !stadium) return;
+
+    let activePlayer: HTMLElement | null = null;
+
+    players.forEach(player => {
+      player.addEventListener('click', () => {
+        const p = player as HTMLElement;
+        activePlayer = p;
+
+        if (mName) mName.innerText = p.dataset.name || "";
+        if (mRating) mRating.innerText = p.dataset.rating || "";
+        if (mStats) mStats.innerText = p.dataset.stats || "";
+        if (mDesc) mDesc.innerText = p.dataset.desc || "";
+        
+        // Asignamos la imagen principal correspondiente a la tarjeta
+        if (mImgContainer && p.dataset.img) {
+          mImgContainer.style.backgroundImage = `url('${p.dataset.img}')`;
+        }
+
+        // Asignamos la imagen secundaria al panel flotante derecho
+        if (mRotatingImage && p.dataset.imgsec) {
+          mRotatingImage.style.backgroundImage = `url('${p.dataset.imgsec}')`;
+        }
+
+        p.classList.add('expanding');
+        stadium.style.transform = "rotateX(0deg) scale(0.85)";
+        
+        // Bloqueamos el scroll de la página
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => {
+          modal.classList.add('active');
+        }, 500);
+      });
+    });
+
+    const handleClose = () => {
+      if (modal && stadium) {
+        modal.classList.remove('active');
+        stadium.style.transform = "rotateX(25deg) scale(1)";
+        
+        // Devolvemos el scroll a la normalidad
+        document.body.style.overflow = '';
+
+        setTimeout(() => {
+          if (activePlayer) {
+            activePlayer.classList.remove('expanding');
+            activePlayer.classList.add('revealed');
+            activePlayer = null;
+          }
+        }, 300);
+      }
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', handleClose);
+    modal.addEventListener('click', (e: MouseEvent) => { 
+      if (e.target === modal) handleClose(); 
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', initializeField);
+  document.addEventListener('astro:page-load', initializeField);
+</script>

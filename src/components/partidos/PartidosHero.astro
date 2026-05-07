@@ -1,0 +1,98 @@
+---
+import { upcomingMatches } from "../../data/partidos";
+const nextMatch = upcomingMatches.length > 0 ? upcomingMatches[0] : null;
+---
+
+<section
+  class="relative flex flex-col justify-center min-h-[90vh] lg:min-h-[100vh] overflow-hidden bg-[#0a0505] border-b border-brand-gold/20 pt-32 pb-24 sm:pt-40 sm:pb-32"
+>
+  {/* Fondo base con texturas */}
+  <div
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(145,31,33,0.35)_0%,rgba(10,5,5,1)_80%)]"
+  >
+  </div>
+  <div
+    class="absolute inset-0 opacity-30 mix-blend-overlay"
+    style="background-image: repeating-linear-gradient(-45deg, transparent, transparent 28px, rgba(255, 255, 255, 0.05) 28px, rgba(255, 255, 255, 0.05) 29px);"
+  >
+  </div>
+
+  <div class="container-shell relative z-10 flex flex-col items-center">
+    {
+      nextMatch ? (
+        <div class="w-full flex flex-col items-center">
+          <span class="eyebrow mb-8 sm:mb-12">Siguiente Batalla</span>
+
+          <div class="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
+            {/* Local */}
+            <div class="flex flex-col items-center w-full md:w-[35%] relative group">
+              <div class="absolute inset-0 bg-brand-gold/20 rounded-full blur-[70px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div class="relative w-36 h-36 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-white/10 to-white/0 border border-white/10 p-6 md:p-10 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center mb-6 sm:mb-8 transition-transform duration-500 group-hover:scale-105 group-hover:border-brand-gold/40">
+                <img
+                  src={nextMatch.homeLogo}
+                  alt={nextMatch.home}
+                  class="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+                />
+              </div>
+              <h2
+                class="font-heading text-3xl md:text-5xl font-black uppercase tracking-[0.05em] text-white leading-tight break-words text-center drop-shadow-md"
+                style="text-wrap: balance;"
+              >
+                {nextMatch.home}
+              </h2>
+            </div>
+
+            {/* VS */}
+            <div class="flex flex-col items-center w-full md:w-[20%] z-20 py-6 md:py-0">
+              <div class="font-display text-7xl md:text-[9rem] leading-none tracking-[0.05em] text-transparent bg-clip-text bg-gradient-to-b from-brand-gold via-[#ffd700] to-[#a67c00] drop-shadow-[0_0_40px_rgba(255,164,0,0.3)]">
+                VS
+              </div>
+              <div class="mt-4 md:mt-6 flex flex-col items-center gap-2 text-center">
+                <span class="font-heading text-[0.6rem] md:text-[0.7rem] font-black uppercase tracking-[0.25em] text-brand-gold bg-brand-gold/10 px-5 py-2 rounded-full border border-brand-gold/30 shadow-[0_0_15px_rgba(255,164,0,0.2)]">
+                  {nextMatch.shortCompetition}
+                </span>
+                <div class="flex flex-col items-center mt-3 md:mt-4 opacity-90">
+                  <span class="font-heading text-sm md:text-base font-extrabold uppercase tracking-[0.1em] text-white">
+                    {nextMatch.dateLabel}
+                  </span>
+                  <span class="font-heading text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">
+                    {nextMatch.stadium} • {nextMatch.time}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Visita */}
+            <div class="flex flex-col items-center w-full md:w-[35%] mt-4 md:mt-0 relative group">
+              <div class="absolute inset-0 bg-white/10 rounded-full blur-[70px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div class="relative w-36 h-36 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-white/10 to-white/0 border border-white/10 p-6 md:p-10 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center mb-6 sm:mb-8 transition-transform duration-500 group-hover:scale-105 group-hover:border-white/40">
+                <img
+                  src={nextMatch.awayLogo}
+                  alt={nextMatch.away}
+                  class="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+                />
+              </div>
+              <h2
+                class="font-heading text-3xl md:text-5xl font-black uppercase tracking-[0.05em] text-white leading-tight break-words text-center drop-shadow-md"
+                style="text-wrap: balance;"
+              >
+                {nextMatch.away}
+              </h2>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div class="max-w-4xl text-center">
+          <span class="eyebrow">Club Chankas CYC</span>
+          <h1 class="mt-6 font-display text-6xl leading-none tracking-[0.16em] text-white sm:text-7xl md:text-8xl">
+            PARTIDOS
+          </h1>
+          <p class="mt-5 max-w-2xl mx-auto text-base leading-7 text-white/65 sm:text-lg">
+            Fixture real de Los Chankas en el Torneo Apertura: próximos
+            encuentros, resultados disputados y tabla de posiciones.
+          </p>
+        </div>
+      )
+    }
+  </div>
+</section>

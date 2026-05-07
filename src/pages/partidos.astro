@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PartidosHero from "../components/partidos/PartidosHero.astro";
+import { playedMatches, standings, upcomingMatches } from "../data/partidos";
+import UpcomingMatches from "../components/partidos/UpcomingMatches.astro";
+import PlayedMatches from "../components/partidos/PlayedMatches.astro";
+import StandingsTable from "../components/partidos/StandingsTable.astro";
+---
+
+<BaseLayout title="Chankas CYC | Partidos">
+  <PartidosHero />
+
+  <section class="surface-light py-16">
+    <div class="container-shell">
+      <div class="mb-10 flex flex-wrap border-b border-black/10">
+        <button type="button" class="match-tab border-b-[3px] border-brand-gold px-5 py-4 font-heading text-xs font-black uppercase tracking-[0.24em] text-brand-garnet" data-panel="upcoming">Próximos</button>
+        <button type="button" class="match-tab border-b-[3px] border-transparent px-5 py-4 font-heading text-xs font-black uppercase tracking-[0.24em] text-black/45" data-panel="results">Resultados</button>
+        <button type="button" class="match-tab border-b-[3px] border-transparent px-5 py-4 font-heading text-xs font-black uppercase tracking-[0.24em] text-black/45" data-panel="table">Tabla</button>
+      </div>
+
+      <UpcomingMatches />
+      <PlayedMatches />
+      <StandingsTable />
+    </div>
+  </section>
+
+  <script is:inline>
+    const tabs = document.querySelectorAll(".match-tab");
+    const panels = document.querySelectorAll(".match-panel");
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((node) => {
+          node.classList.remove("border-brand-gold", "text-brand-garnet");
+          node.classList.add("border-transparent", "text-black/45");
+        });
+        tab.classList.add("border-brand-gold", "text-brand-garnet");
+        tab.classList.remove("border-transparent", "text-black/45");
+        const target = tab.dataset.panel;
+        panels.forEach((panel) => {
+          panel.classList.toggle("hidden", panel.dataset.panelContent !== target);
+        });
+      });
+    });
+  </script>
+</BaseLayout>
+
+
+

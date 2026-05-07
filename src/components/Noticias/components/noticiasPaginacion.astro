@@ -1,0 +1,60 @@
+---
+// src/components/noticias/NewsPagination.astro
+---
+
+<div x-show="totalPages > 1" class="mt-14">
+    <div class="flex items-center justify-center gap-2">
+        <!-- Botón anterior -->
+        <button
+            @click="paginaActual = Math.max(1, paginaActual - 1)"
+            :disabled="paginaActual === 1"
+            class="w-10 h-10 flex items-center justify-center font-heading font-bold text-sm border-2 rounded-md transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="paginaActual === 1 ? 'border-gray-200 text-gray-400' : 'border-gray-300 text-gray-600 hover:border-brand-gold hover:text-brand-gold'"
+        >
+            <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+
+        <!-- Números de página -->
+        <template x-for="p in totalPages" :key="p">
+            <button
+                @click="paginaActual = p"
+                class="w-10 h-10 flex items-center justify-center font-heading font-bold text-sm border-2 rounded-md transition-all duration-200"
+                :class="paginaActual === p ? 'border-brand-garnet bg-brand-garnet text-white' : 'border-gray-300 text-gray-600 hover:border-brand-gold hover:text-brand-gold'"
+                x-text="p"
+            >
+            </button>
+        </template>
+
+        <!-- Botón siguiente -->
+        <button
+            @click="paginaActual = Math.min(totalPages, paginaActual + 1)"
+            :disabled="paginaActual === totalPages"
+            class="w-10 h-10 flex items-center justify-center font-heading font-bold text-sm border-2 rounded-md transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="paginaActual === totalPages ? 'border-gray-200 text-gray-400' : 'border-gray-300 text-gray-600 hover:border-brand-gold hover:text-brand-gold'"
+        >
+            <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+    </div>
+</div>

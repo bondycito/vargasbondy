@@ -1,0 +1,120 @@
+﻿---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { membershipPlans } from "../data/site";
+---
+
+<BaseLayout title="Chankas CYC | Socios">
+  <PageHero title="SOCIOS" subtitle="Planes de membresía y formulario visual, reescritos como página estática con una interacción mínima del lado del cliente." />
+
+  <section class="surface-light py-16">
+    <div class="container-shell">
+      <div class="mb-12 text-center">
+        <span class="eyebrow">Elige tu nivel</span>
+        <h2 class="mt-5 font-heading text-3xl font-black uppercase tracking-[0.16em] text-brand-ink sm:text-4xl">Planes de membresía</h2>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-3">
+        {
+          membershipPlans.map((plan) => (
+            <article
+              class:list={[
+                "overflow-hidden border-2 shadow-[0_12px_32px_rgba(0,0,0,.06)]",
+                plan.dark
+                  ? "border-brand-gold/30 bg-brand-ink text-white"
+                  : plan.featured
+                  ? "border-brand-garnet bg-white text-brand-ink"
+                  : "border-black/8 bg-white text-brand-ink",
+              ]}
+            >
+              <div class:list={[plan.dark ? "bg-brand-gold" : "bg-brand-garnet", "h-1 w-full"]}></div>
+              <div class="p-8">
+                {plan.highlight && <span class="inline-block rounded-full bg-brand-gold px-3 py-1 font-heading text-[0.6rem] font-black uppercase tracking-[0.24em] text-brand-ink">{plan.highlight}</span>}
+                <h2 class:list={[plan.dark ? "text-brand-gold" : "text-brand-ink", "mt-5 font-display text-5xl tracking-[0.12em]"]}>{plan.id}</h2>
+                <p class:list={[plan.dark ? "text-white/55" : "text-black/55", "mt-3 text-sm leading-7"]}>{plan.tagline}</p>
+                <p class:list={[plan.dark ? "text-brand-gold" : "text-brand-garnet", "mt-6 font-heading text-3xl font-black uppercase tracking-[0.08em]"]}>{plan.price}</p>
+                <ul class="mt-6 space-y-3">
+                  {plan.features.map((feature) => <li class:list={[plan.dark ? "text-white/75" : "text-black/65", "text-sm leading-7"]}>• {feature}</li>)}
+                </ul>
+                <a href="#registro" class:list={[plan.dark || plan.featured ? "button-primary" : "button-ghost-dark", "mt-8"]}>Quiero este plan</a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section id="registro" class="relative overflow-hidden bg-brand-ink py-20">
+    <div class="absolute inset-0 texture-grid"></div>
+    <div class="container-shell relative">
+      <div class="mx-auto max-w-3xl overflow-hidden border border-white/8 bg-white shadow-[0_20px_64px_rgba(0,0,0,.45)]">
+        <div class="h-1 bg-gradient-to-r from-brand-garnet to-brand-gold"></div>
+        <div class="p-8 sm:p-10">
+          <div id="membership-form-shell">
+            <div class="mb-8 text-center">
+              <span class="font-heading text-[0.65rem] font-black uppercase tracking-[0.32em] text-brand-garnet">Formulario de registro</span>
+              <h2 class="mt-4 font-heading text-3xl font-black uppercase tracking-[0.12em] text-brand-ink">Únete ahora</h2>
+            </div>
+            <form id="membership-form" class="grid gap-5 md:grid-cols-2">
+              <label class="block">
+                <span class="mb-2 block font-heading text-[0.65rem] font-black uppercase tracking-[0.2em] text-brand-garnet">Nombre completo</span>
+                <input class="w-full border border-black/10 px-4 py-3 text-sm text-brand-ink outline-none focus:border-brand-garnet" name="name" required />
+              </label>
+              <label class="block">
+                <span class="mb-2 block font-heading text-[0.65rem] font-black uppercase tracking-[0.2em] text-brand-garnet">Correo</span>
+                <input type="email" class="w-full border border-black/10 px-4 py-3 text-sm text-brand-ink outline-none focus:border-brand-garnet" name="email" required />
+              </label>
+              <label class="block">
+                <span class="mb-2 block font-heading text-[0.65rem] font-black uppercase tracking-[0.2em] text-brand-garnet">Teléfono</span>
+                <input class="w-full border border-black/10 px-4 py-3 text-sm text-brand-ink outline-none focus:border-brand-garnet" name="phone" />
+              </label>
+              <label class="block">
+                <span class="mb-2 block font-heading text-[0.65rem] font-black uppercase tracking-[0.2em] text-brand-garnet">Plan</span>
+                <select class="w-full border border-black/10 px-4 py-3 text-sm text-brand-ink outline-none focus:border-brand-garnet" name="plan" required>
+                  <option value="">Selecciona un plan</option>
+                  {membershipPlans.map((plan) => <option value={plan.id}>{plan.id} · {plan.price}</option>)}
+                </select>
+              </label>
+              <label class="block md:col-span-2">
+                <span class="mb-2 block font-heading text-[0.65rem] font-black uppercase tracking-[0.2em] text-brand-garnet">Mensaje</span>
+                <textarea class="min-h-36 w-full border border-black/10 px-4 py-3 text-sm text-brand-ink outline-none focus:border-brand-garnet" name="message"></textarea>
+              </label>
+              <div class="md:col-span-2">
+                <button class="button-primary w-full" type="submit">Registrar solicitud</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="membership-success" class="hidden text-center">
+            <div class="mx-auto flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-2 border-brand-garnet bg-[rgba(145,31,33,0.08)] text-3xl text-brand-garnet">✓</div>
+            <h3 class="mt-6 font-display text-5xl tracking-[0.1em] text-brand-ink">BIENVENIDO</h3>
+            <p class="mt-4 text-sm leading-7 text-black/65">
+              Tu solicitud fue registrada como demostración visual. Esta versión estática no envía datos a un backend.
+            </p>
+            <button id="reset-form" type="button" class="button-ghost-dark mt-8">Volver al formulario</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const form = document.getElementById("membership-form");
+    const formShell = document.getElementById("membership-form-shell");
+    const success = document.getElementById("membership-success");
+    const reset = document.getElementById("reset-form");
+
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      formShell?.classList.add("hidden");
+      success?.classList.remove("hidden");
+    });
+
+    reset?.addEventListener("click", () => {
+      success?.classList.add("hidden");
+      formShell?.classList.remove("hidden");
+      form?.reset();
+    });
+  </script>
+</BaseLayout>

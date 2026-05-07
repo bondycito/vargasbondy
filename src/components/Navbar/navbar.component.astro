@@ -1,0 +1,157 @@
+﻿---
+// src/components/Header/Header.astro
+import NavbarLogo from "./components/navbarLogo.astro";
+import NavLinks from "./components/navbarLinks.astro";
+import { navLinks, ctaButton } from "./data/navbarLinks";
+import "./assets/styles/navbarStyle.css";
+
+const currentPath = Astro.url.pathname;
+
+const isActive = (to: string) => {
+  if (to === "/") return currentPath === "/";
+  return currentPath.startsWith(to);
+};
+---
+
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+      <!-- Logo -->
+      <a
+        href="/"
+        class="flex items-center gap-3 flex-shrink-0"
+        style="text-decoration: none;"
+      >
+        <NavbarLogo size={44} />
+        <div>
+          <div class="logo-text logo-text-main">CHANKAS</div>
+          <div class="logo-text logo-text-sub">CYC</div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden lg:flex items-center gap-1">
+        <NavLinks links={navLinks} isActive={isActive} variant="desktop" />
+      </div>
+
+      <!-- CTA Button -->
+      <div class="hidden lg:flex items-center">
+        <a href={ctaButton.to} class="cta-button">
+          {ctaButton.label}
+        </a>
+      </div>
+
+      <!-- Mobile menu button - íconos en línea para mejor control -->
+      <button
+        id="menu-toggle"
+        class="lg:hidden text-white p-2"
+        style="background: none; border: none; cursor: pointer;"
+        aria-label="Abrir menú"
+      >
+        <!-- Ícono de menú (hamburguesa) -->
+        <svg
+          id="menu-icon-open"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#Fw400"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <!-- Ícono de cerrar (X) -->
+        <svg
+          id="menu-icon-close"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#FFA400"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="display: none;"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" style="display: none;">
+    <div
+      style="background-color: #7A1A1C; border-top: 1px solid rgba(255,164,0,0.3);"
+    >
+      <div class="px-4 py-4 flex flex-col gap-2">
+        <NavLinks links={navLinks} isActive={isActive} variant="mobile" />
+        <a href={ctaButton.to} class="mobile-cta-button">
+          {ctaButton.label}
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // ===== SCROLL EFFECT =====
+  const navbar = document.getElementById("navbar");
+
+  function handleScroll() {
+    if (navbar) {
+      if (window.scrollY > 20) {
+        navbar.classList.add("scrolled");
+      } else {
+        navbar.classList.remove("scrolled");
+      }
+    }
+  }
+
+  window.addEventListener("scroll", handleScroll);
+  handleScroll();
+
+  // ===== MOBILE MENU TOGGLE =====
+  // Esperar a que el DOM esté completamente cargado
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuToggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const iconOpen = document.getElementById("menu-icon-open");
+    const iconClose = document.getElementById("menu-icon-close");
+
+    // Debug: verificar que encontramos los elementos
+    console.log("menuToggle:", menuToggle);
+    console.log("mobileMenu:", mobileMenu);
+    console.log("iconOpen:", iconOpen);
+    console.log("iconClose:", iconClose);
+
+    if (menuToggle && mobileMenu && iconOpen && iconClose) {
+      menuToggle.addEventListener("click", () => {
+        const isOpen = mobileMenu.style.display === "block";
+
+        console.log("Menu clicked, isOpen:", isOpen);
+
+        if (isOpen) {
+          // Cerrar menú
+          mobileMenu.style.display = "none";
+          iconOpen.style.display = "block";
+          iconClose.style.display = "none";
+        } else {
+          // Abrir menú
+          mobileMenu.style.display = "block";
+          iconOpen.style.display = "none";
+          iconClose.style.display = "block";
+        }
+      });
+    } else {
+      console.error(
+        "No se encontraron los elementos necesarios para el menú móvil",
+      );
+    }
+  });
+</script>

@@ -1,0 +1,63 @@
+---
+// src/components/noticias/NewsGrid.astro
+---
+
+<section class="bg-[#F5F5F5] py-16">
+    <div class="container-shell">
+        <!-- Encabezado -->
+        <div class="mb-14">
+            <div class="flex items-center gap-4 mb-3">
+                <div class="w-10 h-[3px] bg-brand-garnet"></div>
+                <span class="font-heading font-black text-[11px] text-brand-garnet tracking-[4px] uppercase">
+                    ACTUALIDAD
+                </span>
+            </div>
+            <div class="flex justify-between items-end flex-wrap gap-4">
+                <h2 class="font-heading font-black text-[clamp(28px,4vw,42px)] text-brand-ink tracking-[2px] uppercase m-0 leading-tight">
+                    ÚLTIMAS NOTICIAS
+                </h2>
+            </div>
+        </div>
+
+        <!-- Grid dinámico -->
+        <div x-show="noticiasPaginadas.length > 0">
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-7">
+                <template x-for="noticia in noticiasPaginadas" :key="noticia.id">
+                    <article
+                        class="bg-white border border-[#EEEEEE] overflow-hidden cursor-pointer transition-all duration-300 group hover:shadow-[0_12px_40px_rgba(145,31,33,0.2),0_4px_12px_rgba(145,31,33,0.1)] hover:-translate-y-1"
+                    >
+                        <div class="relative pb-[56.25%] overflow-hidden">
+                            <img
+                                :src="imagenesMap[noticia.imagen]"
+                                :alt="noticia.titulo"
+                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-107"
+                            />
+                            <div class="absolute inset-0 bg-brand-garnet/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <span class="absolute top-[14px] left-[14px] bg-brand-gold text-brand-ink font-heading font-black text-[10px] tracking-[2px] px-2.5 py-1.5">
+                                <span x-text="noticia.categoria"></span>
+                            </span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-1.5 mb-3">
+                                <svg class="w-3 h-3 text-brand-garnet" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span class="font-body text-xs text-[#999999] tracking-[0.5px]" x-text="noticia.fecha"></span>
+                            </div>
+                            <h3 class="font-heading font-bold text-base text-brand-ink leading-tight mb-3 uppercase tracking-[0.5px] transition-colors duration-200 group-hover:text-brand-garnet" x-text="noticia.titulo"></h3>
+                            <p class="font-body text-sm text-[#666666] leading-relaxed mb-5 h-[60px]" x-text="noticia.contenido"></p>
+                        </div>
+                    </article>
+                </template>
+            </div>
+        </div>
+
+        <!-- Mensaje sin resultados -->
+        <div x-show="noticiasPaginadas.length === 0" class="text-center py-20 text-brand-ink/40 font-heading text-base tracking-[2px] uppercase">
+            No hay noticias en esta categoría.
+        </div>
+
+        <!-- Paginación - se renderiza dentro de la misma sección -->
+        <slot />
+    </div>
+</section>
